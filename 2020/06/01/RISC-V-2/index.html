@@ -79,11 +79,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Onendless">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="&amp;emsp;&amp;emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自己阅读的资料中，都还没有学习到具体的代码规范，但想来对于Verilog这样的硬件描述语言来说，好的C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V学习笔记（二）RTL代码风格">
+<meta property="og:url" content="http://yoursite.com/2020/06/01/RISC-V-2/index.html">
 <meta property="og:site_name" content="Onendless">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自己阅读的资料中，都还没有学习到具体的代码规范，但想来对于Verilog这样的硬件描述语言来说，好的C">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-01T09:54:54.000Z">
+<meta property="article:modified_time" content="2020-06-01T11:15:43.294Z">
 <meta property="article:author" content="Onendless">
 <meta name="twitter:card" content="summary">
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/06/01/RISC-V-2/"/>
 
 
 
 
 
-  <title>Onendless</title>
+  <title>RISC-V学习笔记（二）RTL代码风格 | Onendless</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/01/RISC-V-2/" itemprop="url">RISC-V学习笔记（二）RTL代码风格</a></h1>
+          <h1 class="post-title" itemprop="name headline">RISC-V学习笔记（二）RTL代码风格</h1>
         
 
         <div class="post-meta">
@@ -320,18 +321,47 @@
       
 
       
-        
-          
-          &emsp;&emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/01/RISC-V-2/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>&emsp;&emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自己阅读的资料中，都还没有学习到具体的代码规范，但想来对于Verilog这样的硬件描述语言来说，好的Coding Style或许更为重要，因为Verilog的代码反映的是具体电路，尽管是同一个功能，但不同的写法会直接导致综合器生成不同的电路，进而影响电路的性能。在阅读《手把手教你设计CPU——RISC-V篇》时，书中给出了蜂鸟E200处理器采用的Verilog RTL编码风格，要点如下:  </p>
+<p><strong>1. 使用标准DFF模块例化生成寄存器</strong><br>&emsp;&emsp;刚开始看到这里我是比较困惑的，在我之前不多的verilog使用经验中，涉及到的寄存器都是直接通过reg定义，然后在always块中使用，虽然也见过面试题中老师让用verilog写一个D触发器的案例，但是在我的认知中，这些都是由综合器自己根据RTL功能综合出来的。书中给出的使用标准DFF模块例化的好处有以下几点：  </p>
+<blockquote>
+<ul>
+<li>便于全局替换寄存器类型。  </li>
+<li>便于在寄存器中全局插入延迟。</li>
+<li>明确的load-enable信号方便综合工具自动插入寄存器级别的门控时钟以降低动态功耗。</li>
+<li>便于规避Verilog语法if-else不能传播不定态问题  </li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;此外，在书中给出的标准DFF模块代码中，还注意到端口定义的风格</p>
+<p><strong>2. 端口定义</strong></p>
+<blockquote>
+<ul>
+<li>端口宽度和输入输出类型定义都在端口列表中完成。  </li>
+<li>输出端口定义为wire，用内部的一个输出寄存器reg去驱动输出wire。  </li>
+</ul>
+</blockquote>
+<p><strong>3. 使用assertion捕捉lden不定态</strong><br>&emsp;&emsp;涉及到systemverilog，暂不探究。  </p>
+<p><strong>4. 使用assign语法替代if-else(case)语法</strong><br>&emsp;&emsp;if-else和case存在两大缺点  </p>
+<blockquote>
+<ul>
+<li>不能传播不定态。  </li>
+<li>会产生优先级的选择电路而非并行选择电路，从而不利于时序和面积。</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;如果确实是希望生成一种优先级选择的逻辑，书中推荐使用如下的形式以规避X不定态传播的问题。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> out = sel1 ? in1[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">             sel2 ? in2[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">             sel3 ? in3[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">                    <span class="number">4'b0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;而如果是希望生成一种并行选择逻辑，书中推荐使用assign语法明确地使用与或逻辑,不要使用综合器提供的指引注释。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> out = (&#123;<span class="number">4</span>&#123;sel1&#125;&#125; &amp; in1[<span class="number">3</span>:<span class="number">0</span>]) <span class="comment">//&#123;4&#123;w&#125;&#125;等同于&#123;w,w,w,w&#125;</span></span><br><span class="line">            |(&#123;<span class="number">4</span>&#123;sel2&#125;&#125; &amp; in2[<span class="number">3</span>:<span class="number">0</span>])</span><br><span class="line">            |(&#123;<span class="number">4</span>&#123;sel3&#125;&#125; &amp; in3[<span class="number">3</span>:<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. 其他注意事项</strong></p>
+<blockquote>
+<ul>
+<li>由于带有reset的寄存器面积和时序会差一点，因此只在控制控制通路上使用带reset的寄存器，在数据通路上不使用。</li>
+<li>注意信号名定义，代码即注释。</li>
+<li>Clock和Reset信号禁止被用于其他逻辑功能。</li>
+</ul>
+</blockquote>
+
       
     </div>
     
@@ -348,160 +378,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/31/RISC-V-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Onendless">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Onendless">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/31/RISC-V-1/" itemprop="url">RISC-V学习笔记（一）CPU发展及ISA综述</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-31T21:36:06+08:00">
-                2020-05-31
-              </time>
+              <a href="/2020/05/31/RISC-V-1/" rel="next" title="RISC-V学习笔记（一）CPU发展及ISA综述">
+                <i class="fa fa-chevron-left"></i> RISC-V学习笔记（一）CPU发展及ISA综述
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RISC-V/" itemprop="url" rel="index">
-                    <span itemprop="name">RISC-V</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          &emsp;&emsp;近来重新捡起之前的or1200项目，卡在了C语言交叉编译这一部分，对于C语言到寄存器的映射一时摸不着头脑，以前用51时也都是使用汇编来写代码，在stm32，ARC上开发时又都有成熟的平台和库文件，以至于在使用or1200这样一个裸核时自己无法完成从软件到硬件的一个完整闭环。重
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/31/RISC-V-1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -511,158 +409,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/30/Begin%20Again/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Onendless">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Onendless">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/30/Begin%20Again/" itemprop="url">Begin Again</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-30T16:52:32+08:00">
-                2020-05-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%9D%82%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">杂记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          &emsp;&emsp;最近借着学习RISC-V做笔记的契机，又开始写博客了，从2017年到现在，断断续续地做过几次博客，但自身问题实在太多。其一是所知甚少而注意力又太分散，学习技术时中途涉及到其他不会领域的就立马转去学习，用wordpress时去学js，PHP，自己建服务器时又去学wamp，总是不
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/30/Begin%20Again/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -670,6 +421,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -876,6 +631,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

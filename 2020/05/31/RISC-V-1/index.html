@@ -79,11 +79,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Onendless">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="&amp;emsp;&amp;emsp;近来重新捡起之前的or1200项目，卡在了C语言交叉编译这一部分，对于C语言到寄存器的映射一时摸不着头脑，以前用51时也都是使用汇编来写代码，在stm32，ARC上开发时又都有成熟的平台和库文件，以至于在使用or1200这样一个裸核时自己无法完成从软件到硬件的一个完整闭环。重新学习了编译原理和Makefile的规范之后，发现对于CPU底层的知识欠缺还是太多，加上也缺乏动力继">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V学习笔记（一）CPU发展及ISA综述">
+<meta property="og:url" content="http://yoursite.com/2020/05/31/RISC-V-1/index.html">
 <meta property="og:site_name" content="Onendless">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;近来重新捡起之前的or1200项目，卡在了C语言交叉编译这一部分，对于C语言到寄存器的映射一时摸不着头脑，以前用51时也都是使用汇编来写代码，在stm32，ARC上开发时又都有成熟的平台和库文件，以至于在使用or1200这样一个裸核时自己无法完成从软件到硬件的一个完整闭环。重新学习了编译原理和Makefile的规范之后，发现对于CPU底层的知识欠缺还是太多，加上也缺乏动力继">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-31T13:36:06.433Z">
+<meta property="article:modified_time" content="2020-06-01T08:31:39.596Z">
 <meta property="article:author" content="Onendless">
 <meta name="twitter:card" content="summary">
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/05/31/RISC-V-1/"/>
 
 
 
 
 
-  <title>Onendless</title>
+  <title>RISC-V学习笔记（一）CPU发展及ISA综述 | Onendless</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,157 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/RISC-V-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Onendless">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Onendless">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/01/RISC-V-2/" itemprop="url">RISC-V学习笔记（二）RTL代码风格</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-01T17:54:54+08:00">
-                2020-06-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RISC-V/" itemprop="url" rel="index">
-                    <span itemprop="name">RISC-V</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          &emsp;&emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/01/RISC-V-2/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -394,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/31/RISC-V-1/" itemprop="url">RISC-V学习笔记（一）CPU发展及ISA综述</a></h1>
+          <h1 class="post-title" itemprop="name headline">RISC-V学习笔记（一）CPU发展及ISA综述</h1>
         
 
         <div class="post-meta">
@@ -468,18 +321,47 @@
       
 
       
-        
-          
-          &emsp;&emsp;近来重新捡起之前的or1200项目，卡在了C语言交叉编译这一部分，对于C语言到寄存器的映射一时摸不着头脑，以前用51时也都是使用汇编来写代码，在stm32，ARC上开发时又都有成熟的平台和库文件，以至于在使用or1200这样一个裸核时自己无法完成从软件到硬件的一个完整闭环。重
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/31/RISC-V-1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>&emsp;&emsp;近来重新捡起之前的or1200项目，卡在了C语言交叉编译这一部分，对于C语言到寄存器的映射一时摸不着头脑，以前用51时也都是使用汇编来写代码，在stm32，ARC上开发时又都有成熟的平台和库文件，以至于在使用or1200这样一个裸核时自己无法完成从软件到硬件的一个完整闭环。重新学习了编译原理和Makefile的规范之后，发现对于CPU底层的知识欠缺还是太多，加上也缺乏动力继续深究or1200，索性再系统地学习一遍处理器设计，恰好这两年RISV-V正兴起，其架构设计也十分简洁，用来做学习应该是很合适的，选择的主要参考书目是胡振波的《手把手教你设计CPU——RISC-V处理器篇》。  </p>
+<p>&emsp;&emsp;从进入集成电路专业的学习到现在，接触过的各种处理器不少，其背后的ISA也算是有所了解。X86在PC端和服务器领域无疑是霸主级的存在，而嵌入式领域方面，随着移动手持设备的不断发展，先发制人、构建好完整的软件生态的ARM也是筑起宽阔的护城河，在深嵌入式领域，不同的ISA倒是各有千秋，虽然ARM的Cortex-M系列仍有巨大优势，但51、ARC等架构也比较活跃。纵观ISA的发展历程，从CISC到RISC，从闭源到开源，其间崛起了数个巨头，也有不少化作历史的尘埃，开源的项目虽然众多，但有的走不出象牙塔，有的没能做好发展规划，如之前接触的openrisc，虽然作为一种指令集架构，但其主要产品却是具体的处理器实现，其使用的GPL协议也在一定程度上限制了他的商业化应用。  </p>
+<p> &emsp;&emsp;而RISC-V，在指令集架构和自身发展规划上都有着先进的理念。在大道至简的设计哲学指导下，RISC-V分为多个子集，采用可随意组合的模块化设计，最基础的RV32I子集仅有四十多条指令，从RISC-V的spec文档也可以看出，相比于ARM动辄上千页的spec，RISC-V的spec目前算上附录也仅有200页出头。不得不承认，RISC-V的简洁性很大程度上得益于它的后发优势，它无需像之前的RISC指令集一样向后兼容之前无数次版本迭代带来的许多冗杂且落后于时代的设计，当然RISC-V在之后是否也会逐渐变得臃肿，进而被新的ISA替代也仍未可知，毕竟从真正大规模应用的CPU诞生到现在，也不过区区几十年，还谈不上什么历史周期律，而且就算是CISC的X86架构，也能在体量不断膨胀的进程中，通过诸如微码化的优化方式来保持旺盛的生命力。</p>
+<p>&emsp;&emsp;在《手把手教你设计CPU——RISC-V处理器篇》一书中，对RISC-V指令集的优点特性做了比较详尽的列举。</p>
+<blockquote>
+<ol>
+<li><p>模块化的指令子集。其中RV32IMAFD被称为通用组合，用RV32G表示。</p>
+</li>
+<li><p>可配置的通用寄存器。支持32为和64位架构，其中I架构包含32个通用整数寄存器，整数寄存器0被预留为常数0。</p>
+</li>
+<li><p>规整的指令编码。</p>
+</li>
+<li><p>简洁的存储器访问指令。仅支持小端模式，不支持地址自增自减模式，采用松散存储器模型。</p>
+</li>
+<li><p>高效的分支跳转指令。比较和跳转放在一条指令里完成，使用静态分支预测，默认向后预测为跳。</p>
+</li>
+<li><p>简洁的子程序调用。在保存现场和恢复现场时，放弃“一次读多个寄存器”和“一次写多个寄存器”指令，简化设计。</p>
+</li>
+<li><p>无条件码执行。对于任何的条件判断都使用带条件分支跳转指令。</p>
+</li>
+<li><p>无分支延迟槽（Dalay Slot）。</p>
+</li>
+<li><p>不使用零开销硬件循环指令。不从硬件上设置循环次数寄存器，减小硬件设计复杂度。</p>
+</li>
+<li><p>简洁的运算指令。对于任何运算指令错误，不产生异常，而是产生特殊的默认值，推荐软件通过其他方法来找到这些错误。</p>
+</li>
+<li><p>优雅的压缩指令集。RV32C指令集每条指令长度仅为16位，减小了代码体积。</p>
+</li>
+<li><p>特权模式。支持机器模式，监督模式，用户模式。</p>
+</li>
+<li><p>CSR（control and status register）寄存器。使用自己独立的地址编码空间。</p>
+</li>
+<li><p>相对简单基本的中断和异常处理机制。</p>
+</li>
+<li><p>矢量指令集。使用可变长度矢量。</p>
+</li>
+<li><p>子定制指令扩展。预留了大量指令编码空间用于用户的自定义扩展。</p>
+</li>
+</ol>
+</blockquote>
+
       
     </div>
     
@@ -496,160 +378,32 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/30/Begin%20Again/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Onendless">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Onendless">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/30/Begin%20Again/" itemprop="url">Begin Again</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-30T16:52:32+08:00">
-                2020-05-30
-              </time>
+              <a href="/2020/05/30/Begin%20Again/" rel="next" title="Begin Again">
+                <i class="fa fa-chevron-left"></i> Begin Again
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
+              <a href="/2020/06/01/RISC-V-2/" rel="prev" title="RISC-V学习笔记（二）RTL代码风格">
+                RISC-V学习笔记（二）RTL代码风格 <i class="fa fa-chevron-right"></i>
+              </a>
             
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%9D%82%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">杂记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          &emsp;&emsp;最近借着学习RISC-V做笔记的契机，又开始写博客了，从2017年到现在，断断续续地做过几次博客，但自身问题实在太多。其一是所知甚少而注意力又太分散，学习技术时中途涉及到其他不会领域的就立马转去学习，用wordpress时去学js，PHP，自己建服务器时又去学wamp，总是不
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/30/Begin%20Again/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -659,10 +413,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -670,6 +425,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -876,6 +635,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
