@@ -79,15 +79,15 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;为了避免让流水线暂停来等待分支跳转的计算结果，取指时通常会预测方向和地址来进行下一条指令的预测取指和预测执行。需要预测的是跳转的方向和地址。 1. 预测方向&amp;emsp;&amp;emsp;对于方向的预测分为静态预测和动态预测。 1.1 静态预测&amp;emsp;&amp;emsp;静态预测，即仅依靠当前分支指令本身进行预测，不考虑历史信息，常见的静态预测方法有两种：   永远预测不会跳转，按顺序">
+<meta name="description" content="&amp;emsp;&amp;emsp;为了避免让流水线暂停来等待分支跳转的计算结果，需要进行下一条指令的预测取指和预测执行。具体要预测的是跳转的方向和地址。 1. 预测方向&amp;emsp;&amp;emsp;对于方向的预测分为静态预测和动态预测。 1.1 静态预测&amp;emsp;&amp;emsp;静态预测，即仅依靠当前分支指令本身进行预测，不考虑历史信息，常见的静态预测方法有两种：   永远预测不会跳转，按顺序取分支指令的下一条指令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RISC-V学习笔记（五）取指——分支预测">
 <meta property="og:url" content="http://yoursite.com/2020/06/06/RISC-V-5/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;为了避免让流水线暂停来等待分支跳转的计算结果，取指时通常会预测方向和地址来进行下一条指令的预测取指和预测执行。需要预测的是跳转的方向和地址。 1. 预测方向&amp;emsp;&amp;emsp;对于方向的预测分为静态预测和动态预测。 1.1 静态预测&amp;emsp;&amp;emsp;静态预测，即仅依靠当前分支指令本身进行预测，不考虑历史信息，常见的静态预测方法有两种：   永远预测不会跳转，按顺序">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;为了避免让流水线暂停来等待分支跳转的计算结果，需要进行下一条指令的预测取指和预测执行。具体要预测的是跳转的方向和地址。 1. 预测方向&amp;emsp;&amp;emsp;对于方向的预测分为静态预测和动态预测。 1.1 静态预测&amp;emsp;&amp;emsp;静态预测，即仅依靠当前分支指令本身进行预测，不考虑历史信息，常见的静态预测方法有两种：   永远预测不会跳转，按顺序取分支指令的下一条指令">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-05T16:09:00.000Z">
-<meta property="article:modified_time" content="2020-06-05T16:09:57.237Z">
+<meta property="article:modified_time" content="2020-06-05T16:19:29.191Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="RISC-V">
 <meta name="twitter:card" content="summary">
@@ -322,7 +322,7 @@
       
 
       
-        <p>&emsp;&emsp;为了避免让流水线暂停来等待分支跳转的计算结果，取指时通常会预测方向和地址来进行下一条指令的预测取指和预测执行。需要预测的是跳转的方向和地址。</p>
+        <p>&emsp;&emsp;为了避免让流水线暂停来等待分支跳转的计算结果，需要进行下一条指令的预测取指和预测执行。具体要预测的是跳转的方向和地址。</p>
 <h2 id="1-预测方向"><a href="#1-预测方向" class="headerlink" title="1. 预测方向"></a><strong>1. 预测方向</strong></h2><p>&emsp;&emsp;对于方向的预测分为静态预测和动态预测。</p>
 <h3 id="1-1-静态预测"><a href="#1-1-静态预测" class="headerlink" title="1.1 静态预测"></a><strong>1.1 静态预测</strong></h3><p>&emsp;&emsp;静态预测，即仅依靠当前分支指令本身进行预测，不考虑历史信息，常见的静态预测方法有两种：</p>
 <blockquote>
