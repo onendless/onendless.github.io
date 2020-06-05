@@ -87,7 +87,7 @@
 <meta property="og:description" content="&amp;emsp;&amp;emsp;以前在使用C和python等语言开发时，深刻地体会到了成熟的Coding Style对于程序可读性的重要性，固定且合理的命名规则，缩进格式等代码规范，不仅能让代码整体看起来更美观，而且能使变量的含义、程序的目的清晰可见。但开始使用Verilog以来，无论是在课堂上还是在课外自己阅读的资料中，都还没有学习到具体的代码规范，但想来对于Verilog这样的硬件描述语言来说，好的C">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-01T09:54:54.000Z">
-<meta property="article:modified_time" content="2020-06-05T08:22:40.905Z">
+<meta property="article:modified_time" content="2020-06-05T10:33:49.583Z">
 <meta property="article:author" content="Onendless">
 <meta name="twitter:card" content="summary">
 
@@ -347,7 +347,7 @@
 <li>会产生优先级的选择电路而非并行选择电路，从而不利于时序和面积。</li>
 </ul>
 </blockquote>
-<p><font color=gray>关于if-else和assign的选择在其他资料中看到有不同的说法，有待后续探究</font></p>
+<p><font color=green>关于if-else和assign的选择在其他资料中看到有不同的说法，有待后续探究</font></p>
 <p>&emsp;&emsp;如果确实是希望生成一种优先级选择的逻辑，书中推荐使用如下的形式以规避X不定态传播的问题。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> out = sel1 ? in1[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">             sel2 ? in2[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">             sel3 ? in3[<span class="number">3</span>:<span class="number">0</span>]:</span><br><span class="line">                    <span class="number">4'b0</span>;</span><br></pre></td></tr></table></figure>
 
