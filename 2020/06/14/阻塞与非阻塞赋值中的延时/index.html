@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="RISC-V," />
+  <meta name="keywords" content="Verilog," />
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;处理器流水线这一部分在以前上计组课的时候学过经典的MIPS五级流水线结构：取指-译码-执行-访存-写回，但对于不同深度的流水线具体有何区别不甚了解。流水线目前的发展可以简单概括为向上生长-越来越深，和向下生长-越来越浅。 &amp;emsp;&amp;emsp;向上生长 &amp;emsp;&amp;emsp;流水线的级数越多，意味着流水线被切割得越细，每一级流水线内容纳的硬件逻辑便越少。而在两级寄存器（">
+<meta name="description" content="&amp;emsp;&amp;emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值，给定一个输入信号，信号中有一个长度为1ns的向下抖动  分别以五种不同的赋值方式将输入信号赋给输出 12345678910111213always@(*)	#3 out1 &#x3D; in1;always@(*)	#3 out2 &lt;&#x3D; in1;always@(*)	out3 &#x3D; #3 in1;always@(*)	out4 &lt;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RISC-V学习笔记（三）处理器流水线简述">
-<meta property="og:url" content="https://yoursite.com/2020/06/01/RISC-V-3/index.html">
+<meta property="og:title" content="阻塞与非阻塞赋值中的延时">
+<meta property="og:url" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;处理器流水线这一部分在以前上计组课的时候学过经典的MIPS五级流水线结构：取指-译码-执行-访存-写回，但对于不同深度的流水线具体有何区别不甚了解。流水线目前的发展可以简单概括为向上生长-越来越深，和向下生长-越来越浅。 &amp;emsp;&amp;emsp;向上生长 &amp;emsp;&amp;emsp;流水线的级数越多，意味着流水线被切割得越细，每一级流水线内容纳的硬件逻辑便越少。而在两级寄存器（">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值，给定一个输入信号，信号中有一个长度为1ns的向下抖动  分别以五种不同的赋值方式将输入信号赋给输出 12345678910111213always@(*)	#3 out1 &#x3D; in1;always@(*)	#3 out2 &lt;&#x3D; in1;always@(*)	out3 &#x3D; #3 in1;always@(*)	out4 &lt;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-01T11:24:35.000Z">
-<meta property="article:modified_time" content="2020-06-01T14:04:23.642Z">
+<meta property="og:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png">
+<meta property="og:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%87%BA%E6%B3%A2%E5%BD%A2.png">
+<meta property="article:published_time" content="2020-06-14T14:05:50.000Z">
+<meta property="article:modified_time" content="2020-06-14T16:02:24.701Z">
 <meta property="article:author" content="Onendless">
-<meta property="article:tag" content="RISC-V">
+<meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/01/RISC-V-3/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/06/14/阻塞与非阻塞赋值中的延时/"/>
 
 
 
 
 
-  <title>RISC-V学习笔记（三）处理器流水线简述 | Onendless</title>
+  <title>阻塞与非阻塞赋值中的延时 | Onendless</title>
   
 
 
@@ -233,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/01/RISC-V-3/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -250,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">RISC-V学习笔记（三）处理器流水线简述</h1>
+          <h1 class="post-title" itemprop="name headline">阻塞与非阻塞赋值中的延时</h1>
         
 
         <div class="post-meta">
@@ -262,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-01T19:24:35+08:00">
-                2020-06-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T22:05:50+08:00">
+                2020-06-14
               </time>
             
 
@@ -285,8 +288,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RISC-V/" itemprop="url" rel="index">
-                    <span itemprop="name">RISC-V</span>
+                  <a href="/categories/Verilog/" itemprop="url" rel="index">
+                    <span itemprop="name">Verilog</span>
                   </a>
                 </span>
 
@@ -322,25 +325,29 @@
       
 
       
-        <p>&emsp;&emsp;处理器流水线这一部分在以前上计组课的时候学过经典的MIPS五级流水线结构：取指-译码-执行-访存-写回，但对于不同深度的流水线具体有何区别不甚了解。流水线目前的发展可以简单概括为向上生长-越来越深，和向下生长-越来越浅。</p>
-<p>&emsp;&emsp;<strong>向上生长</strong></p>
-<p>&emsp;&emsp;流水线的级数越多，意味着流水线被切割得越细，每一级流水线内容纳的硬件逻辑便越少。而在两级寄存器（每一级流水线由寄存器组成）之间的硬件逻辑越少，则意味着能运行到更高的主频，因此，处理器流水线越来越深是由追求高频的指标所驱使。而由此面临的问题主要由三点：</p>
+        <p>&emsp;&emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值，给定一个输入信号，信号中有一个长度为1ns的向下抖动</p>
+<p><img src="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png" alt="输入信号"></p>
+<p>分别以五种不同的赋值方式将输入信号赋给输出</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	#<span class="number">3</span> out1 = in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	#<span class="number">3</span> out2 &lt;= in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	out3 = #<span class="number">3</span> in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	out4 &lt;= #<span class="number">3</span> in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> #<span class="number">3</span> out5 = in1;</span><br></pre></td></tr></table></figure>
+
+<p>得到的输出波形图如下</p>
+<p><img src="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%87%BA%E6%B3%A2%E5%BD%A2.png" alt="输出波形"></p>
+<p>下面分别分析以下五种赋值方式的异同（注：延时在句首为正规延时，在赋值符号右侧为内定延时）</p>
+<ul>
+<li>第一个是3ns延时后的阻塞赋值，当输入信号从0跳到1，敏感信号发生变化，进入always块，由于有3ns的延时，因此在3ns后，输入信号此时的值赋给out1，out1从0跳到1。而当输入信号从1跳到0时，always块再次触发，进入always块后仍然需要等待一个3ns的延时，而在3ns过后，此时的输入信号已经恢复到1，因此此时的out1被赋给的值是1，需要注意的是，#3这一延时操作，其本身也具有类似于阻塞的性质，因此在输入信号从0跳到1时，由于#3的阻塞，always块无法触发，结果是<strong>out1没有采集到输入信号向下的1ns跳变</strong>。</li>
+<li>第二个是3ns延时后的非阻塞赋值，同理，由于#3延时的阻塞作用，输入信号从0跳变到1时无法触发always块，因为在这一案例中，非阻塞赋值语句之后没有其他语句，所以阻塞和非阻塞赋值实际上没有区别。</li>
+<li>第三个是3ns内定延时的阻塞赋值，与正规延时不同的是，内定延时的赋值语句，所赋的值是always块触发时的值，只是在3ns延时后才体现出来，也可以这样理解：<strong>正规延时，是在延时之后才建立起赋值语句两端变量之间的连接；内定延时，是在always块触发时就建立起赋值语句两端变量的连接，只是在这个连接中插入了延时单元</strong>。因此，out3采集到了输入信号向下的1ns跳变，但是当输入信号向上跳变时，此时的电路阻塞在#3的延时中，没有采集到这一跳变，out3仍保持为0，当3ns延时过后，只有在最后输入信号向下跳变时always块才能再被触发，而此时输入为0，out3也就不发生变化了。</li>
+<li>第四个是3ns内定延时的非阻塞赋值，因为对延时做了非阻塞控制，所以当输入信号向下跳变1ns后向上跳变时，always块不会阻塞再内部的3ns延时中，而是能被输入信号的跳变触发，所以out4能完整地采集到输入信号的所有变化。</li>
+<li>第五个是带正规延时的连续赋值语句，由于延时的阻塞作用，实际上<strong>out5和out1等价</strong>，都会因为阻塞在#3延时这一步而无法采集到输入信号的抖动。所以理论上，out1和out5具有去毛刺的作用。</li>
+</ul>
+<hr>
+<p>&emsp;&emsp;这一例子，主要说明了两点问题：</p>
 <blockquote>
 <ul>
-<li>面积开销大。加深流水线的级数，本质上是用面积换性能。</li>
-<li>由于每一级流水线需要握手，流水线最后一级的反压信号可能会一直串扰到最前一级造成严重的时序问题。</li>
-<li>分支预测失败的损失过大。</li>
+<li>赋值语句中正规延时和内定延时所采样的时间点不同。</li>
+<li>延时本身具有阻塞作用，除非在非阻塞赋值中使用内定延时。</li>
 </ul>
 </blockquote>
-<p>&emsp;&emsp;<strong>向下生长</strong></p>
-<p>&emsp;&emsp;减少流水线的级数，也就可以减小流水线中的寄存器开销，以性能换面积。而与流水线相对的一种策略，就是状态机，在之前看过的一些实现单周期CPU的博客中，就是用状态机来实现，使用状态机，可以省去流水线中的寄存器开销，还可以复用组合逻辑数据通路，面积开销较小，但吞吐率和性能很差。</p>
-<p>&emsp;&emsp;总而言之，处理器的流水线深度，是一个面积功耗与性能的tradeoff，在书中所参考的蜂鸟E200就是一个追求超低功耗而使用两级流水线的处理器核。</p>
-<hr>
-<p>&emsp;&emsp;流水线设计中的另一个问题就是流水线冲突，主要分为资源冲突和数据冲突。</p>
-<p>&emsp;&emsp;<strong>资源冲突</strong></p>
-<p>&emsp;&emsp;主要是运算单元的冲突，可以通过复制硬件资源和流水线停顿来解决。</p>
-<p>&emsp;&emsp;<strong>数据冲突</strong></p>
-<p>&emsp;&emsp;由WAR,WAW,RAW,三种数据相关性造成，其中RAW是真数据相关，因为WAR,WAW都可以通过寄存器重命名的方法解决，而RAW不行，一旦产生RAW相关性，后序的指令一定要使用和他有RAW数据相关性的前序指令执行完成的结果，从而造成流水线的停顿。</p>
 
       
     </div>
@@ -358,7 +365,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/RISC-V/" rel="tag"># RISC-V</a>
+            <a href="/tags/Verilog/" rel="tag"># Verilog</a>
           
         </div>
       
@@ -371,8 +378,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/01/RISC-V-2/" rel="next" title="RISC-V学习笔记（二）RTL代码风格">
-                <i class="fa fa-chevron-left"></i> RISC-V学习笔记（二）RTL代码风格
+              <a href="/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="next" title="if-else和assign的区别">
+                <i class="fa fa-chevron-left"></i> if-else和assign的区别
               </a>
             
           </div>
@@ -380,10 +387,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/05/RISC-V-4/" rel="prev" title="RISC-V学习笔记（四）取指——概述">
-                RISC-V学习笔记（四）取指——概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
