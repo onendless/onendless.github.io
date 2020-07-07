@@ -79,21 +79,24 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;在较高的频率下，需要将延时较长的操作拆分为延时更短的小单元组成流水线以满足时序要求。以加法器为例，可以将64位加法器拆分为4个16位加法器并用流水线实现，从而使电路跑到更高的频率，流水线的设计采用均分以避免某个单元的延时过长而延误整个流水线。数据通路如下图所示：  &amp;emsp;&amp;emsp;流水线中的四个单元为四个16bit加法器，分别执行第0-15位，第16-31位，第32">
+<meta name="description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
 <meta property="og:type" content="article">
-<meta property="og:title" content="加法器的流水线实现">
-<meta property="og:url" content="https://yoursite.com/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:title" content="乘法器的设计">
+<meta property="og:url" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;在较高的频率下，需要将延时较长的操作拆分为延时更短的小单元组成流水线以满足时序要求。以加法器为例，可以将64位加法器拆分为4个16位加法器并用流水线实现，从而使电路跑到更高的频率，流水线的设计采用均分以避免某个单元的延时过长而延误整个流水线。数据通路如下图所示：  &amp;emsp;&amp;emsp;流水线中的四个单元为四个16bit加法器，分别执行第0-15位，第16-31位，第32">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E5%99%A8%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.png">
-<meta property="og:image" content="https://yoursite.com/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%94%B5%E8%B7%AF%E5%9B%BE.png">
-<meta property="article:published_time" content="2020-07-06T11:06:00.000Z">
-<meta property="article:modified_time" content="2020-07-06T16:36:10.294Z">
+<meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(1).png">
+<meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(2).png">
+<meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E5%85%AC%E5%BC%8F.png">
+<meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF1.png">
+<meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png">
+<meta property="article:published_time" content="2020-07-07T07:43:17.000Z">
+<meta property="article:modified_time" content="2020-07-07T13:53:44.800Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E5%99%A8%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(1).png">
 
 
 
@@ -123,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/07/06/加法器的流水线实现/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/07/07/乘法器的设计/"/>
 
 
 
 
 
-  <title>加法器的流水线实现 | Onendless</title>
+  <title>乘法器的设计 | Onendless</title>
   
 
 
@@ -236,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -253,7 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">加法器的流水线实现</h1>
+          <h1 class="post-title" itemprop="name headline">乘法器的设计</h1>
         
 
         <div class="post-meta">
@@ -265,8 +268,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-06T19:06:00+08:00">
-                2020-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-07T15:43:17+08:00">
+                2020-07-07
               </time>
             
 
@@ -325,11 +328,23 @@
       
 
       
-        <p>&emsp;&emsp;在较高的频率下，需要将延时较长的操作拆分为延时更短的小单元组成流水线以满足时序要求。以加法器为例，可以将64位加法器拆分为4个16位加法器并用流水线实现，从而使电路跑到更高的频率，流水线的设计采用均分以避免某个单元的延时过长而延误整个流水线。数据通路如下图所示：</p>
-<p><img src="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E5%99%A8%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.png" alt="加法器数据通路"></p>
-<p>&emsp;&emsp;流水线中的四个单元为四个16bit加法器，分别执行第0-15位，第16-31位，第32-47位，第48-63位的加法，每个单元之间插入一级触发器，A和B两个加数分别拆分为4个16位数，A1和B1进入流水线的第一级进行运算，将进位C1传递到下一级，同时将本级的输出S1打3拍等A4、B4的和计算完成后一起输出；A2和B2则经过一级触发器延时，打一拍之后进入流水线的第二级进行运算(此前的第二级流水线被上一个输入的A2,B2占据)，将进位C2传递到下一级，将本级输出S2打两拍之后与高位结果一起输出，后续的加法同理，最后将得到的COUT,S1,S2,S3,S4拼接完成输出，综合后得到的电路如下如所示：</p>
-<p><img src="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%94%B5%E8%B7%AF%E5%9B%BE.png" alt="加法器电路图"></p>
-<p>&emsp;&emsp;可以看到，流水线的实现，主要是借助中间插入的多个触发器来实现数据的有序流动，在写RTL时，要注意基本的语法问题，不要违背时序，比如数据传输中的阻塞与非阻塞赋值。另外，在用VCS仿真时代码没有报错且得到正确结果，但在通过quartus综合得到电路图的过程中，综合时报出了许多基本的错误，比如多个always块中对同一个变量赋值，还有敏感列表中同时使用了边沿触发和电平触发等，而这些错误在VCS中都顺利通过了，这一点值得注意。</p>
+        <p>&emsp;&emsp;对于简单的乘法运算，在RTL代码中直接写MUL=A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。</p>
+<h2 id="一、无符号数乘法器的设计"><a href="#一、无符号数乘法器的设计" class="headerlink" title="一、无符号数乘法器的设计"></a>一、无符号数乘法器的设计</h2><p><strong>1.部分积移位加</strong></p>
+<p>&emsp;&emsp;最简单的方法就是求出部分积之后移位相加，注意尽量减少部分积的数目，以减少加法器的消耗。比如一个3bit的数乘5bit的数，可以选择产生3个5位的部分积，然后将三个数相加。这一方法的缺陷主要是速度慢，面积大，几乎不使用这种方法。</p>
+<p><strong>2.压缩器</strong></p>
+<p>&emsp;&emsp;压缩器实际上就是使用全加器将部分积提前相加来减少最后部分积的数目，最常用的是3-2压缩器，即将3个部分积压缩位两个(其中一个为加和，一个是进位)，以6个部分积的压缩为例，如下图：</p>
+<p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(1).png" alt="示例"></p>
+<p>将得到的6个部分积移位补0后，每一列的3bit由全加器进行运算，得到和与进位，如图中P1,P2,P3的第0bit相加后得到s0和c1，以此类推三个为一组，对每一列都进行全加运算，最后6个部分积由两个3-2压缩器压缩为4个部分积，在对其中3个部分积进行3-2压缩，将4个部分积压缩为3个，最后得到两个部分积，执行一次加运算即可得到最终输出，如下图所示:</p>
+<p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(2).png" alt="示例"></p>
+<p>在压缩器中，每一组3-2的压缩运算是同时进行的，那么6-4的压缩运算只需要计入一个全加器的延时，4-3的运算计入一个全加器延时，3-2的运算计入一个全加器延时，最后的延时是3个全加器延时加上两个数加法的延时，相比于直接移位相加所需的6个数加法延时速度显然更快。</p>
+<h2 id="二、有符号数乘法器的设计"><a href="#二、有符号数乘法器的设计" class="headerlink" title="二、有符号数乘法器的设计"></a>二、有符号数乘法器的设计</h2><p>&emsp;&emsp;有符号数乘法器的设计同样是使用压缩器来压缩部分积，不同的是，有符号数乘法的部分积计算方法不同。</p>
+<p>&emsp;&emsp;首先在扩展时，有符号数的高位应补符号位，以A*B为例，设A的位宽为6，B的位宽为10，则将A按如下公式展开</p>
+<p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E5%85%AC%E5%BC%8F.png" alt="公式"></p>
+<p>除了最高位符号位，其他位都和无符号数乘法相同乘出部分积，P0-P5都是0或B，而A的最高位符号位与B相乘，得到的结果P6为-B(符号位为1)或0(符号位为0)，如下图所示：</p>
+<p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF1.png" alt="部分积"></p>
+<p>-B用补码表示即是~B+1，注意B的符号位也要取反，而得到~B+1这一部分积的过程中,对~B进行+1的运算会引入多个半加器延时，使得时序较差，因此将+1这一项运算分离出来作为一个单独的部分积，如上图所示的C，C的值由A的符号位确定，A为负则C为1，A为正值则C为0。但由此而来的问题是部分积变成了7个，会多出一次压缩运算，因此将C分解纳入其他部分积，高位的1个C等于低位的两个C，如下图所示：</p>
+<p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png" alt="部分积"></p>
+<p>后续进行3-2压缩运算即可，压缩后最高位溢出的一位一定是符号位，所以可以舍弃不管。</p>
 
       
     </div>
@@ -360,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/" rel="next" title="偶数分频器">
-                <i class="fa fa-chevron-left"></i> 偶数分频器
+              <a href="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/" rel="next" title="加法器的流水线实现">
+                <i class="fa fa-chevron-left"></i> 加法器的流水线实现
               </a>
             
           </div>
@@ -369,10 +384,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/" rel="prev" title="乘法器的设计">
-                乘法器的设计 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -424,8 +435,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -485,6 +505,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、无符号数乘法器的设计"><span class="nav-number">1.</span> <span class="nav-text">一、无符号数乘法器的设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、有符号数乘法器的设计"><span class="nav-number">2.</span> <span class="nav-text">二、有符号数乘法器的设计</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
