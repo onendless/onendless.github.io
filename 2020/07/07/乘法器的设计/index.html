@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
+<meta name="description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较复杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
 <meta property="og:type" content="article">
 <meta property="og:title" content="乘法器的设计">
 <meta property="og:url" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较复杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(1).png">
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/3-2%E5%8E%8B%E7%BC%A9%E5%99%A8(2).png">
@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png">
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/circuit.png">
 <meta property="article:published_time" content="2020-07-07T07:43:17.000Z">
-<meta property="article:modified_time" content="2020-07-14T12:00:49.546Z">
+<meta property="article:modified_time" content="2020-07-14T12:09:47.473Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
@@ -329,7 +329,7 @@
       
 
       
-        <p>&emsp;&emsp;对于简单的乘法运算，在RTL代码中直接写MUL=A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较发杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。</p>
+        <p>&emsp;&emsp;对于简单的乘法运算，在RTL代码中直接写MUL=A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较复杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。</p>
 <h2 id="一、无符号数乘法器的设计"><a href="#一、无符号数乘法器的设计" class="headerlink" title="一、无符号数乘法器的设计"></a>一、无符号数乘法器的设计</h2><p><strong>1.部分积移位加</strong></p>
 <p>&emsp;&emsp;最简单的方法就是求出部分积之后移位相加，注意尽量减少部分积的数目，以减少加法器的消耗。比如一个3bit的数乘5bit的数，可以选择产生3个5位的部分积，然后将三个数相加。这一方法的缺陷主要是速度慢，面积大，几乎不使用这种方法。</p>
 <p><strong>2.压缩器</strong></p>
