@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF1.png">
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png">
 <meta property="article:published_time" content="2020-07-07T07:43:17.000Z">
-<meta property="article:modified_time" content="2020-07-07T13:53:44.800Z">
+<meta property="article:modified_time" content="2020-07-14T03:09:22.493Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
@@ -345,6 +345,7 @@
 <p>-B用补码表示即是~B+1，注意B的符号位也要取反，而得到~B+1这一部分积的过程中,对~B进行+1的运算会引入多个半加器延时，使得时序较差，因此将+1这一项运算分离出来作为一个单独的部分积，如上图所示的C，C的值由A的符号位确定，A为负则C为1，A为正值则C为0。但由此而来的问题是部分积变成了7个，会多出一次压缩运算，因此将C分解纳入其他部分积，高位的1个C等于低位的两个C，如下图所示：</p>
 <p><img src="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png" alt="部分积"></p>
 <p>后续进行3-2压缩运算即可，压缩后最高位溢出的一位一定是符号位，所以可以舍弃不管。</p>
+<p>&emsp;&emsp;在RTL代码的编写中，求部分积可以直接用assign连线形成组合逻辑。部分积的压缩部分，也可以用组合逻辑，但为了方便插入流水线，提高运算效率，使用了时序逻辑。还需注意的一点是，部分积压缩过程中，始终有一位溢出的进位，在verilog编写中要注意处理好这一位，保证符号位的正确。</p>
 
       
     </div>
