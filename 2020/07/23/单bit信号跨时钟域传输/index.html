@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Onendless">
 <meta property="og:description" content="一、慢时钟域到快时钟域&amp;emsp;&amp;emsp;慢时钟域到快时钟域的单bit信号传输可以采用双锁存器法来规避亚稳态，即将输入信号打两拍之后再输出，如下图所示  &amp;emsp;&amp;emsp;信号从时钟域A传到时钟域B时，如果信号在CLKB的时钟沿发生跳变，就会出现亚稳态，使D1触发器无法正确地采到输入信号，出现亚稳态，此时D1的输出为未知态X，但在实际电路中，X最终会变为0或1，在D2触发器的输入Q2处，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE">
+<meta property="og:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 <meta property="article:published_time" content="2020-07-23T10:39:16.000Z">
-<meta property="article:modified_time" content="2020-07-23T12:51:46.823Z">
+<meta property="article:modified_time" content="2020-07-23T13:01:57.002Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE">
+<meta name="twitter:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 
 
 
@@ -325,7 +325,7 @@
 
       
         <h2 id="一、慢时钟域到快时钟域"><a href="#一、慢时钟域到快时钟域" class="headerlink" title="一、慢时钟域到快时钟域"></a>一、慢时钟域到快时钟域</h2><p>&emsp;&emsp;慢时钟域到快时钟域的单bit信号传输可以采用双锁存器法来规避亚稳态，即将输入信号打两拍之后再输出，如下图所示</p>
-<p><img src="/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE" alt="示例图"></p>
+<p><img src="/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="示例图"></p>
 <p>&emsp;&emsp;信号从时钟域A传到时钟域B时，如果信号在CLKB的时钟沿发生跳变，就会出现亚稳态，使D1触发器无法正确地采到输入信号，出现亚稳态，此时D1的输出为未知态X，但在实际电路中，X最终会变为0或1，在D2触发器的输入Q2处，信号已经稳定到0或1，能够被正确地采到，进而使输出D2为稳定值。在一般的电路中，经过两级触发器就已经能够使X稳定下来，因此下面再记录一下学习中遇到的几个问题</p>
 <p>&emsp;&emsp;<strong>1.既然X最终会稳定，为什么要用两级触发器</strong></p>
 <blockquote>
@@ -341,7 +341,7 @@
 </blockquote>
 <p>&emsp;&emsp;综上所述，慢时钟域到快时钟域的双锁存器法，实质上是使用两级触发器消除亚稳态之后等待信号被正确采集到。在此基础上，可以发展出边沿检测电路、脉冲同步器，详见《硬件加速设计方法》笔记。</p>
 <hr>
-<h2 id="二、快时钟域到慢时钟域"><a href="#二、快时钟域到慢时钟域" class="headerlink" title="二、快时钟域到慢时钟域"></a>二、快时钟域到慢时钟域</h2><p>&emsp;&emsp;详见《硬件加速设计方法》笔记或eetop文章<a href="http://bbs.eetop.cn/thread-605419-1-1.html/" target="_blank" rel="noopener">Verilog基本电路设计之一（单bit跨时钟域同步)</a></p>
+<h2 id="二、快时钟域到慢时钟域"><a href="#二、快时钟域到慢时钟域" class="headerlink" title="二、快时钟域到慢时钟域"></a>二、快时钟域到慢时钟域</h2><p>&emsp;&emsp;详见《硬件加速设计方法》笔记或eetop文章<a href="http://bbs.eetop.cn/thread-605419-1-1.html" target="_blank" rel="noopener">Verilog基本电路设计之一（单bit跨时钟域同步)</a></p>
 
       
     </div>
