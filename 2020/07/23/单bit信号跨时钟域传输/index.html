@@ -79,21 +79,20 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值中的延时，给定一个输入信号，信号中有一个长度为1ns的向下抖动  分别以五种不同的赋值方式将输入信号赋给输出 12345678910111213always@(*)	#3 out1 &#x3D; in1;always@(*)	#3 out2 &lt;&#x3D; in1;always@(*)	out3 &#x3D; #3 in1;always@(*)	out4">
+<meta name="description" content="一、慢时钟域到快时钟域&amp;emsp;&amp;emsp;慢时钟域到快时钟域的单bit信号传输可以采用双锁存器法来规避亚稳态，即将输入信号打两拍之后再输出，如下图所示  &amp;emsp;&amp;emsp;信号从时钟域A传到时钟域B时，如果信号在CLKB的时钟沿发生跳变，就会出现亚稳态，使D1触发器无法正确地采到输入信号，出现亚稳态，此时D1的输出为未知态X，但在实际电路中，X最终会变为0或1，在D2触发器的输入Q2处，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Verilog笔记（二）阻塞与非阻塞赋值中的延时">
-<meta property="og:url" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/index.html">
+<meta property="og:title" content="Verilog笔记（六）单bit信号跨时钟域传输">
+<meta property="og:url" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值中的延时，给定一个输入信号，信号中有一个长度为1ns的向下抖动  分别以五种不同的赋值方式将输入信号赋给输出 12345678910111213always@(*)	#3 out1 &#x3D; in1;always@(*)	#3 out2 &lt;&#x3D; in1;always@(*)	out3 &#x3D; #3 in1;always@(*)	out4">
+<meta property="og:description" content="一、慢时钟域到快时钟域&amp;emsp;&amp;emsp;慢时钟域到快时钟域的单bit信号传输可以采用双锁存器法来规避亚稳态，即将输入信号打两拍之后再输出，如下图所示  &amp;emsp;&amp;emsp;信号从时钟域A传到时钟域B时，如果信号在CLKB的时钟沿发生跳变，就会出现亚稳态，使D1触发器无法正确地采到输入信号，出现亚稳态，此时D1的输出为未知态X，但在实际电路中，X最终会变为0或1，在D2触发器的输入Q2处，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png">
-<meta property="og:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%87%BA%E6%B3%A2%E5%BD%A2.png">
-<meta property="article:published_time" content="2020-06-14T14:05:50.000Z">
-<meta property="article:modified_time" content="2020-07-23T10:40:44.564Z">
+<meta property="og:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE">
+<meta property="article:published_time" content="2020-07-23T10:39:16.000Z">
+<meta property="article:modified_time" content="2020-07-23T12:51:46.823Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE">
 
 
 
@@ -123,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/14/阻塞与非阻塞赋值中的延时/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/07/23/单bit信号跨时钟域传输/"/>
 
 
 
 
 
-  <title>Verilog笔记（二）阻塞与非阻塞赋值中的延时 | Onendless</title>
+  <title>Verilog笔记（六）单bit信号跨时钟域传输 | Onendless</title>
   
 
 
@@ -236,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -253,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Verilog笔记（二）阻塞与非阻塞赋值中的延时</h1>
+          <h1 class="post-title" itemprop="name headline">Verilog笔记（六）单bit信号跨时钟域传输</h1>
         
 
         <div class="post-meta">
@@ -265,8 +264,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T22:05:50+08:00">
-                2020-06-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-23T18:39:16+08:00">
+                2020-07-23
               </time>
             
 
@@ -325,29 +324,24 @@
       
 
       
-        <p>&emsp;&emsp;结合一个案例，深入理解阻塞赋值与非阻塞赋值中的延时，给定一个输入信号，信号中有一个长度为1ns的向下抖动</p>
-<p><img src="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7.png" alt="输入信号"></p>
-<p>分别以五种不同的赋值方式将输入信号赋给输出</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	#<span class="number">3</span> out1 = in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	#<span class="number">3</span> out2 &lt;= in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	out3 = #<span class="number">3</span> in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(*)</span><br><span class="line">	out4 &lt;= #<span class="number">3</span> in1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> #<span class="number">3</span> out5 = in1;</span><br></pre></td></tr></table></figure>
-
-<p>得到的输出波形图如下</p>
-<p><img src="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/%E8%BE%93%E5%87%BA%E6%B3%A2%E5%BD%A2.png" alt="输出波形"></p>
-<p>下面分别分析以下五种赋值方式的异同（注：延时在句首为正规延时，在赋值符号右侧为内定延时）</p>
-<ul>
-<li>第一个是3ns延时后的阻塞赋值，当输入信号从0跳到1，敏感信号发生变化，进入always块，由于有3ns的延时，因此在3ns后，输入信号此时的值赋给out1，out1从0跳到1。而当输入信号从1跳到0时，always块再次触发，进入always块后仍然需要等待一个3ns的延时，而在3ns过后，此时的输入信号已经恢复到1，因此此时的out1被赋给的值是1，需要注意的是，#3这一延时操作，其本身也具有类似于阻塞的性质，因此在输入信号从0跳到1时，由于#3的阻塞，always块无法触发，结果是<strong>out1没有采集到输入信号向下的1ns跳变</strong>。</li>
-<li>第二个是3ns延时后的非阻塞赋值，同理，由于#3延时的阻塞作用，输入信号从0跳变到1时无法触发always块，因为在这一案例中，非阻塞赋值语句之后没有其他语句，所以阻塞和非阻塞赋值实际上没有区别。</li>
-<li>第三个是3ns内定延时的阻塞赋值，与正规延时不同的是，内定延时的赋值语句，所赋的值是always块触发时的值，只是在3ns延时后才体现出来，也可以这样理解：<strong>正规延时，是在延时之后才建立起赋值语句两端变量之间的连接；内定延时，是在always块触发时就建立起赋值语句两端变量的连接，只是在这个连接中插入了延时单元</strong>。因此，out3采集到了输入信号向下的1ns跳变，但是当输入信号向上跳变时，此时的电路阻塞在#3的延时中，没有采集到这一跳变，out3仍保持为0，当3ns延时过后，只有在最后输入信号向下跳变时always块才能再被触发，而此时输入为0，out3也就不发生变化了。</li>
-<li>第四个是3ns内定延时的非阻塞赋值，因为对延时做了非阻塞控制，所以当输入信号向下跳变1ns后向上跳变时，always块不会阻塞再内部的3ns延时中，而是能被输入信号的跳变触发，所以out4能完整地采集到输入信号的所有变化。</li>
-<li>第五个是带正规延时的连续赋值语句，由于延时的阻塞作用，实际上<strong>out5和out1等价</strong>，都会因为阻塞在#3延时这一步而无法采集到输入信号的抖动。所以理论上，out1和out5具有去毛刺的作用。</li>
-</ul>
-<hr>
-<p>&emsp;&emsp;这一例子，主要说明了两点问题：</p>
+        <h2 id="一、慢时钟域到快时钟域"><a href="#一、慢时钟域到快时钟域" class="headerlink" title="一、慢时钟域到快时钟域"></a>一、慢时钟域到快时钟域</h2><p>&emsp;&emsp;慢时钟域到快时钟域的单bit信号传输可以采用双锁存器法来规避亚稳态，即将输入信号打两拍之后再输出，如下图所示</p>
+<p><img src="/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/%E4%B8%A4%E7%BA%A7%E8%A7%A6%E5%8F%91%E5%99%A8%E7%A4%BA%E6%84%8F%E5%9B%BE" alt="示例图"></p>
+<p>&emsp;&emsp;信号从时钟域A传到时钟域B时，如果信号在CLKB的时钟沿发生跳变，就会出现亚稳态，使D1触发器无法正确地采到输入信号，出现亚稳态，此时D1的输出为未知态X，但在实际电路中，X最终会变为0或1，在D2触发器的输入Q2处，信号已经稳定到0或1，能够被正确地采到，进而使输出D2为稳定值。在一般的电路中，经过两级触发器就已经能够使X稳定下来，因此下面再记录一下学习中遇到的几个问题</p>
+<p>&emsp;&emsp;<strong>1.既然X最终会稳定，为什么要用两级触发器</strong></p>
 <blockquote>
-<ul>
-<li>赋值语句中正规延时和内定延时所采样的时间点不同。</li>
-<li>延时本身具有阻塞作用，除非在非阻塞赋值中使用内定延时。</li>
-</ul>
+<p>&emsp;&emsp;虽然X会稳定到0或1，但这一跨时钟域的信号并非只分发给一个触发器，在传到不同的触发器时，可能会稳定到不同的状态，不同的稳态再向后传播可能会造成更多影响。而用两级触发器打两拍之后，能保证所有的触发器都接收到同样的信号。</p>
 </blockquote>
+<p>&emsp;&emsp;<strong>2.正确的信号值何时被采到</strong></p>
+<blockquote>
+<p>&emsp;&emsp;亚稳态只是暂时的，在由慢时钟域向快时钟域传递的过程中，慢时钟域的一个脉冲信号在快时钟域中有几个周期的长度，因此即使前面的采集出现了亚稳态，输入信号也总会在某个CLKB的时钟沿满足该时钟域的setup/hold time，从而使信号被正确采到。即输入信号a在传递到快时钟域时经历了一个X → a的过程，当X与a相同时，相当于输入信号提前了两拍到达，若X与a不同，则相当于输入信号延后了两拍到达，在异步电路中，这对实际功能没有影响。</p>
+</blockquote>
+<p>&emsp;&emsp;<strong>3.为什么多bit信号不能用打两拍的方法</strong></p>
+<blockquote>
+<p>&emsp;&emsp;由上一条可知，多bit信号在经过两级触发器之后，各个bit的亚稳态X可能会稳定到不同的状态，从而导致最终采集到的各bit信号出现相位差，产生不符合预期的输入信号，因此这一方法不适合多bit信号的传输，除非输入采用格雷码的方式编码，保证每次状态转换只有1bit发生跳变。</p>
+</blockquote>
+<p>&emsp;&emsp;综上所述，慢时钟域到快时钟域的双锁存器法，实质上是使用两级触发器消除亚稳态之后等待信号被正确采集到。在此基础上，可以发展出边沿检测电路、脉冲同步器，详见《硬件加速设计方法》笔记。</p>
+<hr>
+<h2 id="二、快时钟域到慢时钟域"><a href="#二、快时钟域到慢时钟域" class="headerlink" title="二、快时钟域到慢时钟域"></a>二、快时钟域到慢时钟域</h2><p>&emsp;&emsp;详见《硬件加速设计方法》笔记或eetop文章<a href="http://bbs.eetop.cn/thread-605419-1-1.html/" target="_blank" rel="noopener">Verilog基本电路设计之一（单bit跨时钟域同步)</a></p>
 
       
     </div>
@@ -378,8 +372,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="next" title="Verilog笔记（一）if-else和assign的区别">
-                <i class="fa fa-chevron-left"></i> Verilog笔记（一）if-else和assign的区别
+              <a href="/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/" rel="next" title="Verilog笔记（五）乘法器的设计">
+                <i class="fa fa-chevron-left"></i> Verilog笔记（五）乘法器的设计
               </a>
             
           </div>
@@ -387,10 +381,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/" rel="prev" title="Verilog笔记（三）偶数分频器">
-                Verilog笔记（三）偶数分频器 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -442,8 +432,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -503,6 +502,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、慢时钟域到快时钟域"><span class="nav-number">1.</span> <span class="nav-text">一、慢时钟域到快时钟域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、快时钟域到慢时钟域"><span class="nav-number">2.</span> <span class="nav-text">二、快时钟域到慢时钟域</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

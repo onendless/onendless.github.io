@@ -81,7 +81,7 @@
 
 <meta name="description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较复杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
 <meta property="og:type" content="article">
-<meta property="og:title" content="乘法器的设计">
+<meta property="og:title" content="Verilog笔记（五）乘法器的设计">
 <meta property="og:url" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Onendless">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;对于简单的乘法运算，在RTL代码中直接写MUL&#x3D;A*B，综合工具会自动综合出乘法器，那么为什么要自己写乘法器？实际上，当乘法比较复杂，比如一连串的长位宽乘加运算出现时，如果仍然让综合工具自己综合，一方面无法插入流水线，另一方面时钟频率也无法跑到很快，而如果自己设计乘法器，就可以任意优化。 一、无符号数乘法器的设计1.部分积移位加 &amp;emsp;&amp;emsp;最简单的方法就是求出">
@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/%E9%83%A8%E5%88%86%E7%A7%AF2.png">
 <meta property="og:image" content="https://yoursite.com/2020/07/07/%E4%B9%98%E6%B3%95%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1/circuit.png">
 <meta property="article:published_time" content="2020-07-07T07:43:17.000Z">
-<meta property="article:modified_time" content="2020-07-14T12:14:29.069Z">
+<meta property="article:modified_time" content="2020-07-23T10:41:36.450Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
@@ -133,7 +133,7 @@
 
 
 
-  <title>乘法器的设计 | Onendless</title>
+  <title>Verilog笔记（五）乘法器的设计 | Onendless</title>
   
 
 
@@ -257,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">乘法器的设计</h1>
+          <h1 class="post-title" itemprop="name headline">Verilog笔记（五）乘法器的设计</h1>
         
 
         <div class="post-meta">
@@ -379,8 +379,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/" rel="next" title="加法器的流水线实现">
-                <i class="fa fa-chevron-left"></i> 加法器的流水线实现
+              <a href="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/" rel="next" title="Verilog笔记（四）加法器的流水线实现">
+                <i class="fa fa-chevron-left"></i> Verilog笔记（四）加法器的流水线实现
               </a>
             
           </div>
@@ -388,6 +388,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/" rel="prev" title="Verilog笔记（六）单bit信号跨时钟域传输">
+                Verilog笔记（六）单bit信号跨时钟域传输 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -464,7 +468,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
