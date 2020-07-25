@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hello, Onendless" />
+  <meta name="keywords" content="Verilog," />
 
 
 
@@ -79,12 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Onendless">
-<meta property="og:url" content="https://yoursite.com/categories/RISC-V/index.html">
+<meta name="description" content="&amp;emsp;&amp;emsp;同步FIFO与RAM在结构上类似，主要的区别是FIFO采用先进先出的顺序读写，因此不需要外部地址线，只需要读&#x2F;写两个指针，在同步FIFO的设计中最关键的一点是空满标志的产生，基本原理是对读指针和写指针作比较：  &amp;emsp;&amp;emsp;在FIFO的读写过程中，每一次读&#x2F;写操作后，读指针&#x2F;写指针都会加一，以写指针来到FIFO顶部为例，此时再加1后溢出，指针回到FIFO底部，而">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Verilog笔记（七）同步FIFO">
+<meta property="og:url" content="https://yoursite.com/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/index.html">
 <meta property="og:site_name" content="Onendless">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;同步FIFO与RAM在结构上类似，主要的区别是FIFO采用先进先出的顺序读写，因此不需要外部地址线，只需要读&#x2F;写两个指针，在同步FIFO的设计中最关键的一点是空满标志的产生，基本原理是对读指针和写指针作比较：  &amp;emsp;&amp;emsp;在FIFO的读写过程中，每一次读&#x2F;写操作后，读指针&#x2F;写指针都会加一，以写指针来到FIFO顶部为例，此时再加1后溢出，指针回到FIFO底部，而">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-25T09:42:39.000Z">
+<meta property="article:modified_time" content="2020-07-25T10:33:04.918Z">
 <meta property="article:author" content="Onendless">
+<meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
 
 
@@ -115,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/categories/RISC-V/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/07/25/同步FIFO/"/>
 
 
 
 
 
-  <title>Category: RISC-V | Onendless</title>
+  <title>Verilog笔记（七）同步FIFO | Onendless</title>
   
 
 
@@ -140,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,167 +219,176 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block category">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>RISC-V<small>Category</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Onendless">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Onendless">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/06/06/RISC-V-5/" itemprop="url">
-              
-                <span itemprop="name">RISC-V学习笔记（五）取指——分支预测</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Verilog笔记（七）同步FIFO</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-06-06T00:09:00+08:00"
-              content="2020-06-06" >
-          06-06
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-25T17:42:39+08:00">
+                2020-07-25
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Verilog/" itemprop="url" rel="index">
+                    <span itemprop="name">Verilog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/06/05/RISC-V-4/" itemprop="url">
-              
-                <span itemprop="name">RISC-V学习笔记（四）取指——概述</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-06-05T16:17:40+08:00"
-              content="2020-06-05" >
-          06-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/06/01/RISC-V-3/" itemprop="url">
-              
-                <span itemprop="name">RISC-V学习笔记（三）处理器流水线简述</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-06-01T19:24:35+08:00"
-              content="2020-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/06/01/RISC-V-2/" itemprop="url">
-              
-                <span itemprop="name">RISC-V学习笔记（二）RTL代码风格</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-06-01T17:54:54+08:00"
-              content="2020-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/05/31/RISC-V-1/" itemprop="url">
-              
-                <span itemprop="name">RISC-V学习笔记（一）CPU发展及ISA综述</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-05-31T21:36:06+08:00"
-              content="2020-05-31" >
-          05-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <p>&emsp;&emsp;同步FIFO与RAM在结构上类似，主要的区别是FIFO采用先进先出的顺序读写，因此不需要外部地址线，只需要读/写两个指针，在同步FIFO的设计中最关键的一点是空满标志的产生，基本原理是对读指针和写指针作比较：</p>
+<blockquote>
+<p>&emsp;&emsp;在FIFO的读写过程中，每一次读/写操作后，读指针/写指针都会加一，以写指针来到FIFO顶部为例，此时再加1后溢出，指针回到FIFO底部，而此时如果读指针也在FIFO底部，即目前FIFO中的数据都未被读出，那么判定FIFO为满状态，不可再向内写入数据，推而广之，只要写指针超过了读指针一整个FIFO的深度，那么FIFO就是满状态；同理,当读指针追上了写指针，此时FIFO就判定为空状态，不可再向外读出数据。</p>
+</blockquote>
+<p>&emsp;&emsp;当FIFO空或满时，读写指针都相同，那么如何判断是写指针超过了读指针一圈还是读指针追上了写指针？这里可以在设计时给读写指针地址加1bit的宽度，用多出的这一位MSB来做判断，当写指针超过读指针一圈时，写指针的MSB相比读指针的MSB多1，而当读指针追上写指针时，两者的指针地址包括MSB则完全相同。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> FULL = (WRT_PTR[ADDR_WIDTH-<span class="number">1</span>:<span class="number">0</span>]==RD_PTR[ADDR_WIDTH-<span class="number">1</span>:<span class="number">0</span>]) &amp;&amp; ((WRT_PTR[ADDR_WIDTH]-RD_PTR[ADDR_WIDTH]) == <span class="number">1</span>) ? <span class="number">1</span>:<span class="number">0</span>; </span><br><span class="line"><span class="keyword">assign</span> EMPTY = (WRT_PTR==RD_PTR) ? <span class="number">1</span> : <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;FIFO主体结构的生成可以直接例化一个双口RAM，因为是同步FIFO，读写时钟相同，因此例化时把读写时钟端口连在同一个时钟源，通过传参的方式将RAM深度和数据宽度例化为设定的FIFO大小。要注意只需将FIFO读写指针除MSB外的低位连接到RAM的读写地址线上，MSB只用于空满标志的判断。当外部读写使能有效且内部不处于空满状态时，读写指针在每个时钟沿+1.</p>
+<p>&emsp;&emsp;总的来说，同步FIFO的设计分为3个模块，第一部分是例化的双端口RAM，第二部分是空满标志的判断模块，第三部分是读写指针的递增控制模块。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Verilog/" rel="tag"># Verilog</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/23/%E5%8D%95bit%E4%BF%A1%E5%8F%B7%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/" rel="next" title="Verilog笔记（六）单bit信号跨时钟域传输">
+                <i class="fa fa-chevron-left"></i> Verilog笔记（六）单bit信号跨时钟域传输
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -382,6 +396,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -597,6 +615,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
