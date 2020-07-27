@@ -79,22 +79,21 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;前几天在《手把手教你设计CPU-RISCV篇》书中看到用assign代替if-else语句的coding style，当时深以为然，但是后来在其他地方又看到不同的说法，今天在阅读蜂鸟e203的取指部分源码时发现整个module完全用assign实现，仅例化了几个输出寄存器用来驱动输出连线，而在or1200的源码中却不乏always块及其中的if-else。 &amp;emsp;&amp;e">
+<meta name="description" content="&amp;emsp;&amp;emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Verilog笔记（一）if-else和assign的区别">
-<meta property="og:url" content="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:title" content="Verilog学习笔记（八）异步FIFO">
+<meta property="og:url" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;前几天在《手把手教你设计CPU-RISCV篇》书中看到用assign代替if-else语句的coding style，当时深以为然，但是后来在其他地方又看到不同的说法，今天在阅读蜂鸟e203的取指部分源码时发现整个module完全用assign实现，仅例化了几个输出寄存器用来驱动输出连线，而在or1200的源码中却不乏always块及其中的if-else。 &amp;emsp;&amp;e">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E4%BC%98%E5%85%88%E7%BA%A7assign.png">
-<meta property="og:image" content="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E6%97%A0%E4%BC%98%E5%85%88%E7%BA%A7assign.png">
-<meta property="og:image" content="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E4%BC%98%E5%85%88%E7%BA%A7if-else.png">
-<meta property="article:published_time" content="2020-06-06T17:37:31.000Z">
-<meta property="article:modified_time" content="2020-07-23T10:40:13.027Z">
+<meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E8%99%9A%E7%A9%BA.png">
+<meta property="article:published_time" content="2020-07-27T09:57:56.000Z">
+<meta property="article:modified_time" content="2020-07-27T15:10:59.177Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E4%BC%98%E5%85%88%E7%BA%A7assign.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png">
 
 
 
@@ -124,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/07/if-else和assign的区别/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/07/27/异步FIFO/"/>
 
 
 
 
 
-  <title>Verilog笔记（一）if-else和assign的区别 | Onendless</title>
+  <title>Verilog学习笔记（八）异步FIFO | Onendless</title>
   
 
 
@@ -237,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -254,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Verilog笔记（一）if-else和assign的区别</h1>
+          <h1 class="post-title" itemprop="name headline">Verilog学习笔记（八）异步FIFO</h1>
         
 
         <div class="post-meta">
@@ -266,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-07T01:37:31+08:00">
-                2020-06-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-27T17:57:56+08:00">
+                2020-07-27
               </time>
             
 
@@ -326,17 +325,20 @@
       
 
       
-        <p>&emsp;&emsp;前几天在《手把手教你设计CPU-RISCV篇》书中看到用assign代替if-else语句的coding style，当时深以为然，但是后来在其他地方又看到不同的说法，今天在阅读蜂鸟e203的取指部分源码时发现整个module完全用assign实现，仅例化了几个输出寄存器用来驱动输出连线，而在or1200的源码中却不乏always块及其中的if-else。</p>
-<p>&emsp;&emsp;之前在自己学习CPU的设计时就在想，如果每个逻辑判断都在用clk触发的always块中来实现，那这么多复杂的逻辑怎么能做到最后同步，完成时序收敛呢，显然用assign才是更合理的做法，今天仔细看了or1200和e203的源码就更加困惑。不过再仔细一看，发现其实是自己疏忽了，在or1200中的always块大部分是用来刷新输出级的寄存器，实际上的逻辑判断很多还是通过assign来描述<font color="green">（只阅读了部分or1200代码，存疑）</font>，而e203的这一部分只不过是通过例化通用寄存器模块来实现，隐含了always块。那么可以看出，在这两个不同的CPU设计中，都是使用assign来描述逻辑，为了进一步了解，下面通过quartus的综合工具来看一下同样的逻辑分别用assign和if-else来描述，综合出来的RTL网表有什么区别。</p>
-<p>&emsp;&emsp;<strong>（图一）有优先级的assign和if-else语句综合出的电路</strong></p>
-<p><img src="/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E4%BC%98%E5%85%88%E7%BA%A7assign.png" alt="有优先级assign和if-else语句"></p>
-<p>&emsp;&emsp;<strong>（图二）无优先级的assign语句综合出的电路</strong></p>
-<p><img src="/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E6%97%A0%E4%BC%98%E5%85%88%E7%BA%A7assign.png" alt="无优先级assign语句"></p>
-<p>&emsp;&emsp;根据综合结果，对于有优先级的选择电路，assign语句和if-else语句综合出的电路相同，而按照之前在硬件加速设计方法这门课中学到的，if-else语句会被综合成无优先级选择电路，多if语句会被综合成有优先级的选择电路，但实际上从综合结果来看，两种if语句都被综合成了有优先级的选择电路，因此上面只给出了无优先级的assign语句综合出的电路。</p>
-<p>&emsp;&emsp;那么可以得出的结论是，从基本的逻辑功能来说（无优先级），无论是用assign还是用if-else语句，综合出的电路都是相同的，但如前面RISC-V笔记中所说，if-else不能传播不定态，如果if语句的条件不完备，那么综合工具会提出warning，生成一个latch来用此前的输出作为当前的输出（如图三），而若是设置一个默认值来使if条件完备从而消除latch，不定态就会转换为这个默认值，这是否也等于传播了不定态？有待后续探究。反观assign语句，就不会生成latch，不定态会继续向前传输。</p>
-<p>&emsp;&emsp;<strong>（图三）条件不完备的if-else语句</strong></p>
-<p><img src="/2020/06/07/if-else%E5%92%8Cassign%E7%9A%84%E5%8C%BA%E5%88%AB/%E4%BC%98%E5%85%88%E7%BA%A7if-else.png" alt="条件不完备的if-else语句"></p>
-<p>&emsp;&emsp;<font color="green">注：在mooc上的硬件加速设计方法这一门课中，提倡尽可能使用always块来描述电路，assign仅仅用来连线，少用？：这样的描述方法，给出的理由是可读性较差，且多层嵌套后很难被综合器解释，这与《手把手教你设计CPU-RISCV篇》中提倡的用assign替代if-else的说法冲突。目前暂以后者为准。</font></p>
+        <p>&emsp;&emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本结构如下图：</p>
+<p><img src="/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="异步FIFO结构"></p>
+<p>&emsp;&emsp;对于读写指针跨时钟域传输，在前面单bit信号的跨时钟域传输中提到了打两拍以避免亚稳态传播的方法，要将这种方法应用于多bit信号的传输的话，则需要将多bit信号用格雷码表示，这样可以保证在地址指针递增的过程中每次只有1bit发生变化。而因为使用了格雷码，同步FIFO中通过读写指针的MSB来判断空满的方法要做出相应的调整，由格雷码的镜像特性可知，需要用读写指针的最高两位来做判断，写指针超过读指针一圈达到满状态时，最高两位不同，其余位相同，读指针追上写指针达到空状态时，所有位都相同。综上所述，读写指针的跨时钟域传输可通过一个二进制到格雷码的转换器和两个触发器来完成。</p>
+<hr>
+<p>&emsp;&emsp;然而，一个显而易见的问题是，两级寄存器的方法，只适用于慢时钟域到快时钟域的传输，如果用于快时钟域到慢时钟域的传输，慢时钟域无法采样到快时钟域输出信号的所有变化。以异步FIFO的<strong>快写慢读</strong>为例，写指针如果从0-512快速变化，此时读指针位于64，非常容易出现的情况是，读时钟只采样到写指针的地址为60、65、70这样不连续的值，无法采样到能写指针为64的时刻，因此也就无法产生空标志。但实际上，这样的问题是不存在的，因为如果快写指针落后于慢读指针，那么有两种情况：</p>
+<blockquote>
+<ul>
+<li>第一种是写指针已经溢出过一次，而此时不存在FIFO会空的情况，只会是FIFO即将写满。</li>
+<li>第二种是停止写入，读指针慢慢追上写指针，此时的写指针是定值，与写时钟的频率无关，一定可以被读时钟采到。</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;事实上在读时钟域只需要做空标志的判断，只考虑第二种情况</p>
+<p>&emsp;&emsp;<strong>快读慢写</strong>时满标志情况同理，可以总结出的是，<u>当异步FIFO的空满标志判断需要从快时钟域到慢时钟域传输信号时，该慢时钟域中的标志位如果有被拉高的可能，那一定是快时钟域的指针已经停止变化。</u></p>
+<p>&emsp;&emsp;那么这又带来另一个问题，同样是快写慢读，如果FIFO即将写满，将读指针同步到写指针的时钟域，在同步过程中经过了两级触发器，延时了两拍，当在写时钟域对读写指针进行比较时，读指针实际上是两拍前的地址，此时如果读写指针地址相同，满标志信号拉高，而实际上真正的读指针此时又往前读了两拍，FIFO实际上并没有满，这种情况称为“<strong><font color="red">虚满</font></strong>”，同理，在快读慢写的异步FIFO中，用两拍前的写指针来作判断，也会提前将空信号拉高，造成“<strong><font color="red">虚空</font></strong>”。但实际上这样的情况并没有破坏FIFO的功能，反而增强了鲁棒性，从仿真图中可以看到，在FIFO开始写入过了两拍后，第三拍空标志才拉低，允许读出。<br><img src="/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E8%99%9A%E7%A9%BA.png" alt="虚空"></p>
 
       
     </div>
@@ -367,8 +369,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/06/RISC-V-5/" rel="next" title="RISC-V学习笔记（五）取指——分支预测">
-                <i class="fa fa-chevron-left"></i> RISC-V学习笔记（五）取指——分支预测
+              <a href="/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/" rel="next" title="Verilog笔记（七）同步FIFO">
+                <i class="fa fa-chevron-left"></i> Verilog笔记（七）同步FIFO
               </a>
             
           </div>
@@ -376,10 +378,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/" rel="prev" title="Verilog笔记（二）阻塞与非阻塞赋值中的延时">
-                Verilog笔记（二）阻塞与非阻塞赋值中的延时 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
