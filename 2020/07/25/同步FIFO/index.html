@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://yoursite.com/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/%E7%A9%BA%E7%8A%B6%E6%80%81.png">
 <meta property="og:image" content="https://yoursite.com/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/%E6%BB%A1%E7%8A%B6%E6%80%81.png">
 <meta property="article:published_time" content="2020-07-25T09:42:39.000Z">
-<meta property="article:modified_time" content="2020-07-26T15:20:42.652Z">
+<meta property="article:modified_time" content="2020-07-29T10:42:39.736Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
@@ -332,7 +332,7 @@
 </blockquote>
 <p>&emsp;&emsp;当FIFO空或满时，读写指针都相同，那么如何判断是写指针超过了读指针一圈还是读指针追上了写指针？这里可以在设计时给读写指针地址加1bit的宽度，用多出的这一位MSB来做判断，当写指针超过读指针一圈时，写指针的MSB相比读指针的MSB多1，而当读指针追上写指针时，两者的指针地址包括MSB则完全相同。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> FULL = (WRT_PTR[ADDR_WIDTH-<span class="number">1</span>:<span class="number">0</span>]==RD_PTR[ADDR_WIDTH-<span class="number">1</span>:<span class="number">0</span>]) &amp;&amp; ((WRT_PTR[ADDR_WIDTH]-RD_PTR[ADDR_WIDTH]) == <span class="number">1</span>) ? <span class="number">1</span>:<span class="number">0</span>; </span><br><span class="line"><span class="keyword">assign</span> EMPTY = (WRT_PTR==RD_PTR) ? <span class="number">1</span> : <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;FIFO主体结构的生成可以直接例化一个双口RAM，因为是同步FIFO，读写时钟相同，因此例化时把读写时钟端口连在同一个时钟源，通过传参的方式将RAM深度和数据宽度例化为设定的FIFO大小。要注意只需将FIFO读写指针除MSB外的低位连接到RAM的读写地址线上，MSB只用于空满标志的判断。当外部读写使能有效且内部不处于空满状态时，读写指针在每个时钟沿+1.</p>
+<p>&emsp;&emsp;FIFO主体结构的生成可以直接例化一个双口RAM，因为是同步FIFO，读写时钟相同，因此例化时把读写时钟端口连在同一个时钟源，通过传参的方式将RAM深度和数据宽度例化为设定的FIFO大小。要注意只需将FIFO读写指针除MSB外的低位连接到RAM的读写地址线上，MSB只用于空满标志的判断。当外部读写使能有效且内部不处于空满状态时，读写指针在每个时钟沿+1。</p>
 <p>&emsp;&emsp;总的来说，同步FIFO的设计分为3个模块，第一部分是例化的双端口RAM，第二部分是空满标志的判断模块，第三部分是读写指针的递增控制模块。</p>
 <p>&emsp;&emsp;在testbench中，对不同的读写状态做了测试：</p>
 <ul>
@@ -347,6 +347,17 @@
 <li>满状态：向深度为512的FIFO中持续写入520个数据，不进行读操作，当写完512个数据后，满信号拉高，写指针无法再继续递增，只能不停覆盖最后一个数据。</li>
 </ul>
 <p><img src="/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/%E6%BB%A1%E7%8A%B6%E6%80%81.png" alt="满状态"></p>
+<p>&emsp;&emsp;<br>&emsp;&emsp;<br>&emsp;&emsp;</p>
+<p><strong>UPDATE:</strong></p>
+<p>&emsp;&emsp;在设计时，还可以些地方可以优化：</p>
+<p><strong>1.写/读使能信号</strong></p>
+<p>&emsp;&emsp;如果直接将外部写数据的使能信号连接到例化的RAM的写使能信号上，那么当写满时，FULL信号拉高，指针不再移动，但外部持续有数据输入，此时就会不停覆盖掉FIFO的最后指针所指向的数据。更合理的做法是以外部写使能信号和FULL信号为依据来定义一个内部RAM模块的写使能信号：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assign</span> WRT_EN_IN = WRT_EN &amp;&amp; (!FULL)</span><br></pre></td></tr></table></figure>
+<p>这样当FULL信号拉高是内部例化的RAM就不会再被写入。读信号同理，可以优化为EMPTY时停止读而不是持续读出最后一组数据。</p>
+<p><strong>2.用时序逻辑判断空满标志</strong></p>
+<p>&emsp;&emsp;前面用组合逻辑来做空满标志的判断，可以计算出，产生空满标志所需的延时是读写指针+1的延时(即一级触发器)和组合逻辑的延时，如果空满标志的判断处于关键路径上，使用组合逻辑不能满足时序要求时，则可以使用时序逻辑来实现，以EMPTY信号为例</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> CLK <span class="keyword">or</span> <span class="keyword">posedge</span> RST)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(RST)</span><br><span class="line">        EMPTY &lt;= <span class="number">1'b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (RD_EN &amp;&amp; !WRT_EN &amp;&amp; (WRT_PTR==(RD_PTR+<span class="number">1</span>)))</span><br><span class="line">        EMPTY &lt;= <span class="number">1'b1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(WRT_EN)</span><br><span class="line">        EMPTY &lt;= <span class="number">1'b0</span>;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这样综合出来的电路，在功能上和组合逻辑完全相同，但在时序上只有一个触发器的延时，在读指针+1的那一拍就可以直接将EMPTY信号拉高，而不需要再等待后面的组合逻辑延时。</p>
 
       
     </div>

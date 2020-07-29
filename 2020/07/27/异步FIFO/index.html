@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png">
 <meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E8%99%9A%E7%A9%BA.png">
 <meta property="article:published_time" content="2020-07-27T09:57:56.000Z">
-<meta property="article:modified_time" content="2020-07-27T15:10:59.177Z">
+<meta property="article:modified_time" content="2020-07-29T09:54:21.685Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
@@ -325,7 +325,7 @@
       
 
       
-        <p>&emsp;&emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本结构如下图：</p>
+        <p>&emsp;&emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本结构如下图（图源见水印）：</p>
 <p><img src="/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="异步FIFO结构"></p>
 <p>&emsp;&emsp;对于读写指针跨时钟域传输，在前面单bit信号的跨时钟域传输中提到了打两拍以避免亚稳态传播的方法，要将这种方法应用于多bit信号的传输的话，则需要将多bit信号用格雷码表示，这样可以保证在地址指针递增的过程中每次只有1bit发生变化。而因为使用了格雷码，同步FIFO中通过读写指针的MSB来判断空满的方法要做出相应的调整，由格雷码的镜像特性可知，需要用读写指针的最高两位来做判断，写指针超过读指针一圈达到满状态时，最高两位不同，其余位相同，读指针追上写指针达到空状态时，所有位都相同。综上所述，读写指针的跨时钟域传输可通过一个二进制到格雷码的转换器和两个触发器来完成。</p>
 <hr>
