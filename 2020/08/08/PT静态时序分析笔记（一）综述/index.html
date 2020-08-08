@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Verilog," />
+  <meta name="keywords" content="数字集成电路," />
 
 
 
@@ -79,21 +79,22 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本">
+<meta name="description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Verilog学习笔记（八）异步FIFO">
-<meta property="og:url" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/index.html">
+<meta property="og:title" content="PT静态时序分析笔记（一）综述">
+<meta property="og:url" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本">
+<meta property="og:description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png">
-<meta property="og:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E8%99%9A%E7%A9%BA.png">
-<meta property="article:published_time" content="2020-07-27T09:57:56.000Z">
-<meta property="article:modified_time" content="2020-07-29T09:54:21.685Z">
+<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png">
+<meta property="article:published_time" content="2020-08-08T08:26:09.000Z">
+<meta property="article:modified_time" content="2020-08-08T09:30:28.704Z">
 <meta property="article:author" content="Onendless">
-<meta property="article:tag" content="Verilog">
+<meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
 
 
 
@@ -123,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/07/27/异步FIFO/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/08/08/PT静态时序分析笔记（一）综述/"/>
 
 
 
 
 
-  <title>Verilog学习笔记（八）异步FIFO | Onendless</title>
+  <title>PT静态时序分析笔记（一）综述 | Onendless</title>
   
 
 
@@ -236,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -253,7 +254,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Verilog学习笔记（八）异步FIFO</h1>
+          <h1 class="post-title" itemprop="name headline">PT静态时序分析笔记（一）综述</h1>
         
 
         <div class="post-meta">
@@ -265,8 +266,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-27T17:57:56+08:00">
-                2020-07-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-08T16:26:09+08:00">
+                2020-08-08
               </time>
             
 
@@ -288,8 +289,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Verilog/" itemprop="url" rel="index">
-                    <span itemprop="name">Verilog</span>
+                  <a href="/categories/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">数字集成电路</span>
                   </a>
                 </span>
 
@@ -325,20 +326,48 @@
       
 
       
-        <p>&emsp;&emsp;异步FIFO与同步FIFO的不同之处在于同步FIFO的读写时钟相同，而异步FIFO的读写时钟处于不同的时钟域，而由此带来的设计上的问题就是，在做空满标志的判断时，怎样将不同时钟域的读写指针进行比较。显然，需要将不同时钟域的信号同步到同一个时钟域，在做满标志的判断时，将读指针同步到写指针的时钟域，在做空标志的判断时，将写指针同步到读指针的时钟域，由此可以得出异步FIFO的基本结构如下图（图源见水印）：</p>
-<p><img src="/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E5%BC%82%E6%AD%A5FIFO%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="异步FIFO结构"></p>
-<p>&emsp;&emsp;对于读写指针跨时钟域传输，在前面单bit信号的跨时钟域传输中提到了打两拍以避免亚稳态传播的方法，要将这种方法应用于多bit信号的传输的话，则需要将多bit信号用格雷码表示，这样可以保证在地址指针递增的过程中每次只有1bit发生变化。而因为使用了格雷码，同步FIFO中通过读写指针的MSB来判断空满的方法要做出相应的调整，由格雷码的镜像特性可知，需要用读写指针的最高两位来做判断，写指针超过读指针一圈达到满状态时，最高两位不同，其余位相同，读指针追上写指针达到空状态时，所有位都相同。综上所述，读写指针的跨时钟域传输可通过一个二进制到格雷码的转换器和两个触发器来完成。</p>
-<hr>
-<p>&emsp;&emsp;然而，一个显而易见的问题是，两级寄存器的方法，只适用于慢时钟域到快时钟域的传输，如果用于快时钟域到慢时钟域的传输，慢时钟域无法采样到快时钟域输出信号的所有变化。以异步FIFO的<strong>快写慢读</strong>为例，写指针如果从0-512快速变化，此时读指针位于64，非常容易出现的情况是，读时钟只采样到写指针的地址为60、65、70这样不连续的值，无法采样到能写指针为64的时刻，因此也就无法产生空标志。但实际上，这样的问题是不存在的，因为如果快写指针落后于慢读指针，那么有两种情况：</p>
+        <h3 id="一、静态时序分析简介"><a href="#一、静态时序分析简介" class="headerlink" title="一、静态时序分析简介"></a>一、静态时序分析简介</h3><p>&emsp;&emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对<strong>同步电路</strong>中<strong>所有</strong>的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：</p>
 <blockquote>
 <ul>
-<li>第一种是写指针已经溢出过一次，而此时不存在FIFO会空的情况，只会是FIFO即将写满。</li>
-<li>第二种是停止写入，读指针慢慢追上写指针，此时的写指针是定值，与写时钟的频率无关，一定可以被读时钟采到。</li>
+<li>分析电路最高时钟频率 </li>
+<li>检查设计在所有corner下均能时序收敛</li>
+<li>分析时钟的偏移、不平衡等各种因素对电路时序的影响</li>
 </ul>
 </blockquote>
-<p>&emsp;&emsp;事实上在读时钟域只需要做空标志的判断，只考虑第二种情况</p>
-<p>&emsp;&emsp;<strong>快读慢写</strong>时满标志情况同理，可以总结出的是，<u>当异步FIFO的空满标志判断需要从快时钟域到慢时钟域传输信号时，该慢时钟域中的标志位如果有被拉高的可能，那一定是快时钟域的指针已经停止变化。</u></p>
-<p>&emsp;&emsp;那么这又带来另一个问题，同样是快写慢读，如果FIFO即将写满，将读指针同步到写指针的时钟域，在同步过程中经过了两级触发器，延时了两拍，当在写时钟域对读写指针进行比较时，读指针实际上是两拍前的地址，此时如果读写指针地址相同，满标志信号拉高，而实际上真正的读指针此时又往前读了两拍，FIFO实际上并没有满，这种情况称为“<strong><font color="red">虚满</font></strong>”，同理，在快读慢写的异步FIFO中，用两拍前的写指针来作判断，也会提前将空信号拉高，造成“<strong><font color="red">虚空</font></strong>”。但实际上这样的情况并没有破坏FIFO的功能，反而增强了鲁棒性，从仿真图中可以看到，在FIFO开始写入过了两拍后，第三拍空标志才拉低，允许读出。<br><img src="/2020/07/27/%E5%BC%82%E6%AD%A5FIFO/%E8%99%9A%E7%A9%BA.png" alt="虚空"></p>
+<p>&emsp;&emsp;具体来说，STA要做的，就是扫PVT(process,voltage,temprature)，即分析在不同的PVT下时序是否收敛。</p>
+<ul>
+<li><p>在工艺方面，由于工艺偏差，即使在同一个wafer上，不同位置的器件也会在诸如阈值电压等参数上出现差异，通常对于这些参数上的差异，用tt表示均值，ss表示最小限制值，即在这一corner下电路最慢，ff表示最大限制值，在这一corner下电路能跑到最快。</p>
+</li>
+<li><p>而由于电源的不稳定和后端的IR-drop等因素，也会使芯片的工作电压相较预期出现差异，通常用0.9VDD，VDD，1.1VDD来模拟。</p>
+</li>
+<li><p>芯片工作时的温度通常分为-40，-10，70，125几个温度，在这几个温度下分别检查时序能否收敛。</p>
+</li>
+</ul>
+<p>&emsp;&emsp;以标准单元库中的ss和ff两个PVT为示例，如下图</p>
+<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png" alt="corner"></p>
+<p>&emsp;&emsp;在低温高电压下电路频率能达到最高，在高温低电压下电路频率最低。</p>
+<h3 id="二、静态时序分析基本流程"><a href="#二、静态时序分析基本流程" class="headerlink" title="二、静态时序分析基本流程"></a>二、静态时序分析基本流程</h3><p>&emsp;&emsp;静态时序分析实际上和DC综合十分类似，先来看STA读入和输出的文件：</p>
+<blockquote>
+<p>STA所需要的文件：</p>
+<ul>
+<li>后端网表和SPEF文件</li>
+<li>标准单元库文件</li>
+<li>其他库文件，如IO库，IP库等</li>
+<li>时序约束文件</li>
+<li>STA工具——PT</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>STA所输出的文件：</p>
+<ul>
+<li>带延时的SDF文件</li>
+<li>各种报告及保留结果的session文件</li>
+<li>timing eco文件</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;可以看到，STA和DC输入输出的文件相差不大，其中最重要的内容都是输入的标准单元库、电路描述(DC为Verilog，STA为网表)和约束文件，以及输出的报告。</p>
+<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png" alt="DC"> <img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png" alt="STA"></p>
+<p>&emsp;&emsp;对比DC和STA的流程也十分相似，不同的是因为STA输入的电路描述文件已经是网表，所以不需要再映射为标准单元库中的门级单元，STA中标准单元库主要是提供各单元的逻辑、延时、功耗、电容等信息。同样地，用PT进行静态时序分析也是在pt_shell中完成，通过tcl脚本来批量执行PT命令，具体的命令执行流程在下一篇笔记中详述。</p>
 
       
     </div>
@@ -356,7 +385,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Verilog/" rel="tag"># Verilog</a>
+            <a href="/tags/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF/" rel="tag"># 数字集成电路</a>
           
         </div>
       
@@ -369,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/25/%E5%90%8C%E6%AD%A5FIFO/" rel="next" title="Verilog笔记（七）同步FIFO">
-                <i class="fa fa-chevron-left"></i> Verilog笔记（七）同步FIFO
+              <a href="/2020/08/02/DC%E7%BB%BC%E5%90%88%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%E7%BB%BC%E5%90%88%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="next" title="DC综合笔记（二）综合流程详解">
+                <i class="fa fa-chevron-left"></i> DC综合笔记（二）综合流程详解
               </a>
             
           </div>
@@ -378,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/02/DC%E7%BB%BC%E5%90%88%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E8%BF%B0/" rel="prev" title="DC综合笔记（一）概述">
-                DC综合笔记（一）概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -433,8 +458,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -494,6 +528,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、静态时序分析简介"><span class="nav-number">1.</span> <span class="nav-text">一、静态时序分析简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、静态时序分析基本流程"><span class="nav-number">2.</span> <span class="nav-text">二、静态时序分析基本流程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
