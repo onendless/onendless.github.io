@@ -88,7 +88,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/OCV.png">
 <meta property="article:published_time" content="2020-08-08T09:37:38.000Z">
-<meta property="article:modified_time" content="2020-08-12T10:21:05.588Z">
+<meta property="article:modified_time" content="2020-08-12T15:45:34.703Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
@@ -338,8 +338,8 @@
 <p><strong>2.OCV约束</strong></p>
 <p>&emsp;&emsp;在早期的工艺中没有OCV(On Chip Variation),通常用BC、WC检查setup\hold time即可，其中BC(Best Case)用于检查hold time，WC(Worst Case)用于检查setup time。而随着集成电路工艺进入深亚微米，一方面芯片规模更大，同一个芯片上不同的区域可能处于不同的corner，另一方面二级效应也越加明显。更差的情况是同一条时序路径上launch path(数据路径)和capture path(时钟路径)的PVT也不一样，如下图所示：</p>
 <p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/OCV.png" alt="OCV"></p>
-<p>&emsp;&emsp;对于这种同一条时序路径上不同的PVT，我们需要引入一定的偏差来模拟真实情况并留一定余量，这一偏差通过derate来实现。具体来说，就是对路径上的延时按照一定系数进行放大和缩小</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_timing_derate -early [<span class="keyword">expr</span> <span class="number">1</span> - <span class="number">0.05</span>]</span><br><span class="line">set_timing_derate -late  [<span class="keyword">expr</span> <span class="number">1</span> + <span class="number">0.03</span>]</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;对于这种同一条时序路径上不同的PVT，我们需要引入一定的偏差来模拟真实情况并留一定余量，这一偏差通过derate来实现。具体来说，就是对路径上的延时按照一定系数进行放大和缩小，在设置derate之前，要将PT设置为OCV模式</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set_operating_conditions -analysis_type on_chip_var -library [get_libs $&#123;CORNER&#125;*]</span><br><span class="line">set_timing_derate -early [<span class="keyword">expr</span> <span class="number">1</span> - <span class="number">0.05</span>]</span><br><span class="line">set_timing_derate -late  [<span class="keyword">expr</span> <span class="number">1</span> + <span class="number">0.03</span>]</span><br></pre></td></tr></table></figure>
 
 <p>&emsp;&emsp;如脚本所示，对路径上的延时缩小至0.95倍，放大至1.03倍，至于实际工作中具体的derate系数一般由CAD团队的人来确定这个sign off标准，或由foundry厂给出，不同的corner需要设置的derate值也不同。如果setup留的余量过多会导致时钟降频，hold留的余量过多会导致电路中插入过多buffer。</p>
 <p>&emsp;&emsp;设置好derate系数后，PT进行时序分析时就会进行相应的调整</p>
@@ -391,6 +391,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/" rel="prev" title="PT静态时序分析笔记（三）PT报告分析">
+                PT静态时序分析笔记（三）PT报告分析 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -467,7 +471,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

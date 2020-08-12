@@ -79,22 +79,23 @@
 
 
 
-<meta name="description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
+<meta name="description" content="1.setup time&amp;emsp;&amp;emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：   &amp;emsp;&amp;emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PT静态时序分析笔记（一）综述">
-<meta property="og:url" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/index.html">
+<meta property="og:title" content="PT静态时序分析笔记（三）PT报告分析">
+<meta property="og:url" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
+<meta property="og:description" content="1.setup time&amp;emsp;&amp;emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：   &amp;emsp;&amp;emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png">
-<meta property="article:published_time" content="2020-08-08T08:26:09.000Z">
-<meta property="article:modified_time" content="2020-08-08T09:39:26.385Z">
+<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/derate.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/hold.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/fix.png">
+<meta property="article:published_time" content="2020-08-12T11:11:10.000Z">
+<meta property="article:modified_time" content="2020-08-12T15:45:11.730Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png">
 
 
 
@@ -124,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/08/08/PT静态时序分析笔记（一）综述/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/08/12/PT静态时序分析笔记（三）PT报告分析/"/>
 
 
 
 
 
-  <title>PT静态时序分析笔记（一）综述 | Onendless</title>
+  <title>PT静态时序分析笔记（三）PT报告分析 | Onendless</title>
   
 
 
@@ -237,7 +238,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -254,7 +255,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PT静态时序分析笔记（一）综述</h1>
+          <h1 class="post-title" itemprop="name headline">PT静态时序分析笔记（三）PT报告分析</h1>
         
 
         <div class="post-meta">
@@ -266,8 +267,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-08T16:26:09+08:00">
-                2020-08-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-12T19:11:10+08:00">
+                2020-08-12
               </time>
             
 
@@ -326,48 +327,23 @@
       
 
       
-        <h3 id="一、静态时序分析简介"><a href="#一、静态时序分析简介" class="headerlink" title="一、静态时序分析简介"></a>一、静态时序分析简介</h3><p>&emsp;&emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对<strong>同步电路</strong>中<strong>所有</strong>的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：</p>
-<blockquote>
-<ul>
-<li>分析电路最高时钟频率 </li>
-<li>检查设计在所有corner下均能时序收敛</li>
-<li>分析时钟的偏移、不平衡等各种因素对电路时序的影响</li>
-</ul>
-</blockquote>
-<p>&emsp;&emsp;具体来说，STA要做的，就是扫PVT(process,voltage,temprature)，即分析在不同的PVT下时序是否收敛。</p>
-<ul>
-<li><p>在工艺方面，由于工艺偏差，即使在同一个wafer上，不同位置的器件也会在诸如阈值电压等参数上出现差异，通常对于这些参数上的差异，用tt表示均值，ss表示最小限制值，即在这一corner下电路最慢，ff表示最大限制值，在这一corner下电路能跑到最快。</p>
-</li>
-<li><p>而由于电源的不稳定和后端的IR-drop等因素，也会使芯片的工作电压相较预期出现差异，通常用0.9VDD，VDD，1.1VDD来模拟。</p>
-</li>
-<li><p>芯片工作时的温度通常分为-40，-10，70，125几个温度，在这几个温度下分别检查时序能否收敛。</p>
-</li>
-</ul>
-<p>&emsp;&emsp;以标准单元库中的ss和ff两个PVT为示例，如下图</p>
-<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png" alt="corner"></p>
-<p>&emsp;&emsp;在低温高电压下电路频率能达到最高，在高温低电压下电路频率最低。</p>
-<h3 id="二、静态时序分析基本流程"><a href="#二、静态时序分析基本流程" class="headerlink" title="二、静态时序分析基本流程"></a>二、静态时序分析基本流程</h3><p>&emsp;&emsp;静态时序分析实际上和DC综合十分类似，先来看STA读入和输出的文件：</p>
-<blockquote>
-<p>STA所需要的文件：</p>
-<ul>
-<li>后端网表和SPEF文件</li>
-<li>标准单元库文件</li>
-<li>其他库文件，如IO库，IP库等</li>
-<li>时序约束文件</li>
-<li>STA工具——PT</li>
-</ul>
-</blockquote>
-<blockquote>
-<p>STA所输出的文件：</p>
-<ul>
-<li>带延时的SDF文件</li>
-<li>各种报告及保留结果的session文件</li>
-<li>timing eco文件</li>
-</ul>
-</blockquote>
-<p>&emsp;&emsp;可以看到，STA和DC输入输出的文件相差不大，其中最重要的内容都是输入的标准单元库、电路描述(DC为Verilog，STA为网表)和约束文件，以及输出的报告。</p>
-<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png" alt="DC"> <img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png" alt="STA"></p>
-<p>&emsp;&emsp;对比DC和STA的流程也十分相似，不同的是因为STA输入的电路描述文件已经是网表，所以不需要再映射为标准单元库中的门级单元，STA中标准单元库主要是提供各单元的逻辑、延时、功耗、电容等信息。同样地，用PT进行静态时序分析也是在pt_shell中完成，通过tcl脚本来批量执行PT命令，具体的命令执行流程在下一篇笔记中详述。</p>
+        <h3 id="1-setup-time"><a href="#1-setup-time" class="headerlink" title="1.setup time"></a><strong>1.setup time</strong></h3><p>&emsp;&emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：</p>
+<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png" alt="no_derate"> <img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/derate.png" alt="derate"></p>
+<p>&emsp;&emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到达U88的时间为0.103，而有derate的timing中到达的时间为0.1061，正是0.103的derate系数倍，最后整个电路的时序余量(图中的slack)也相应的有了差异，设置了derate时余量更小。</p>
+<p>&emsp;&emsp;上面的时序检查的是setup time，可以看到报告中的Path Type是max，即setup time，这也是report_timing命令默认的Path Type，在使用report_timing命令时，可以在后面加上参数 -delay_type，然后通过将参数值设置为max或者min来选择看setup time还是hold time。</p>
+<h3 id="2-hold-time"><a href="#2-hold-time" class="headerlink" title="2.hold time"></a><strong>2.hold time</strong></h3><p>&emsp;&emsp;将delay_type设置为min，即可查看hold time的时序，最小延时通常出现在两个触发器之间，即从一个触发器的q端到另一个触发器的d端，因为两者之间没有逻辑，所以很容易出现hold time violation，如下图所示：</p>
+<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/hold.png" alt="hold"></p>
+<p>&emsp;&emsp;这里两级触发器之间的slack就非常小，不过还没有违例，如果出现了违例，修复的方法也很简单，在两级触发器之间插入buffer即可，插入buffer使用inser_buffer命令，后面跟要插入的pin和插入的buffer器件名称，这里需要在RD2WRT_D2_reg_0_/D前插入buffer，而插入的buffer可以在标准单元库中选一个，这里我从doc的标准单元目录中选用BUFX2，然后输入命令：</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert_buffer RD2WRT_D2_reg_0_/D BUFX2</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这样buffer就插入成功了，此时要查看buffer插入后的时序，再report_timing即可，但是要注意的是，插入buffer后刚才这条路径可能就不是最差的路径了，要再复现这条路径，需要用到-from和-to参数，指定路径的起点和终点，然后设置Path Type为min，这样就可以再次查看刚才插入buffer前的路径：</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">report_timing -from RD2WRT_D1_reg_0_ -to RD2WRT_D2_reg_0_ -delay_type min</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/fix.png" alt="fix"></p>
+<p>&emsp;&emsp;在上图中的报告中可以看到，D1和D2两个触发器之间插入了一个BUFX2单元，最后的slack也比charubuffer前宽裕了</p>
+<hr>
+<p>&emsp;&emsp;实际上，PT完成静态时序分析后，我们主要是主要是修transition和hold time的violation，当前级负载过大时会使transition时间变长，这时可以在前级后插入buffer，这样前级就只需要驱动几个buffer，再由buffer去驱动后面的电路。修hold time同样也是通过插入buffer来实现。而如果有setup time的违例，可以将电路中的单元替换为标准单元库中速度更快的单元。</p>
+<p>&emsp;&emsp;PT能生成的报告还有很多，这里只选了其中的report_timing这一条命令来举例，很多其他的命令和报告也不了解，还需要慢慢学习。</p>
 
       
     </div>
@@ -398,8 +374,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/02/DC%E7%BB%BC%E5%90%88%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%E7%BB%BC%E5%90%88%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="next" title="DC综合笔记（二）综合流程详解">
-                <i class="fa fa-chevron-left"></i> DC综合笔记（二）综合流程详解
+              <a href="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="next" title="PT静态时序分析笔记（二）PT流程详解">
+                <i class="fa fa-chevron-left"></i> PT静态时序分析笔记（二）PT流程详解
               </a>
             
           </div>
@@ -407,10 +383,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="prev" title="PT静态时序分析笔记（二）PT流程详解">
-                PT静态时序分析笔记（二）PT流程详解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +514,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、静态时序分析简介"><span class="nav-number">1.</span> <span class="nav-text">一、静态时序分析简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、静态时序分析基本流程"><span class="nav-number">2.</span> <span class="nav-text">二、静态时序分析基本流程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-setup-time"><span class="nav-number">1.</span> <span class="nav-text">1.setup time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-hold-time"><span class="nav-number">2.</span> <span class="nav-text">2.hold time</span></a></li></ol></div>
             
 
           </div>
