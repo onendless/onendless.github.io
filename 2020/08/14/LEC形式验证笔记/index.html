@@ -79,23 +79,20 @@
 
 
 
-<meta name="description" content="1.setup time&amp;emsp;&amp;emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：   &amp;emsp;&amp;emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到">
+<meta name="description" content="一、形式验证简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，我们需要多次验证设计的正确性，之前在前端完成RTL设计后，用VCS完成了功能验证(前仿)，而设计中还需要完成另一环验证，形式验证。与仿真不同的是，形式验证并非向电路中输入动态的激励来测试功能是否正确，而是通过纯数学的方法分析两个网表的逻辑是否等价，这是一种静态的比较，会遍历所有的输入组合，以保证逻辑的等价性。 &amp;emsp;&amp;ems">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PT静态时序分析笔记（三）PT报告分析">
-<meta property="og:url" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="LEC形式验证笔记">
+<meta property="og:url" content="https://yoursite.com/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="1.setup time&amp;emsp;&amp;emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：   &amp;emsp;&amp;emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到">
+<meta property="og:description" content="一、形式验证简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，我们需要多次验证设计的正确性，之前在前端完成RTL设计后，用VCS完成了功能验证(前仿)，而设计中还需要完成另一环验证，形式验证。与仿真不同的是，形式验证并非向电路中输入动态的激励来测试功能是否正确，而是通过纯数学的方法分析两个网表的逻辑是否等价，这是一种静态的比较，会遍历所有的输入组合，以保证逻辑的等价性。 &amp;emsp;&amp;ems">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/derate.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/hold.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/fix.png">
-<meta property="article:published_time" content="2020-08-12T11:11:10.000Z">
-<meta property="article:modified_time" content="2020-08-12T15:45:11.730Z">
+<meta property="og:image" content="https://yoursite.com/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/location.png">
+<meta property="article:published_time" content="2020-08-14T12:38:12.000Z">
+<meta property="article:modified_time" content="2020-08-14T15:26:15.089Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/location.png">
 
 
 
@@ -125,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/08/12/PT静态时序分析笔记（三）PT报告分析/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/08/14/LEC形式验证笔记/"/>
 
 
 
 
 
-  <title>PT静态时序分析笔记（三）PT报告分析 | Onendless</title>
+  <title>LEC形式验证笔记 | Onendless</title>
   
 
 
@@ -238,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -255,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PT静态时序分析笔记（三）PT报告分析</h1>
+          <h1 class="post-title" itemprop="name headline">LEC形式验证笔记</h1>
         
 
         <div class="post-meta">
@@ -267,8 +264,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-12T19:11:10+08:00">
-                2020-08-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-14T20:38:12+08:00">
+                2020-08-14
               </time>
             
 
@@ -327,23 +324,45 @@
       
 
       
-        <h3 id="1-setup-time"><a href="#1-setup-time" class="headerlink" title="1.setup time"></a><strong>1.setup time</strong></h3><p>&emsp;&emsp;用PT完成静态时序分析后，report_timing命令会显示出当前的电路时序，在上一篇笔记中提到过的derate也会在报告中显示出来，如下图分别是没有设置derate和设置了derate的时序情况：</p>
-<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/no_derate.png" alt="no_derate"> <img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/derate.png" alt="derate"></p>
-<p>&emsp;&emsp;derate late的系数设置为1.03，从图中可以看到，以U88这一个cell为例，没有derate的timing中到达U88的时间为0.103，而有derate的timing中到达的时间为0.1061，正是0.103的derate系数倍，最后整个电路的时序余量(图中的slack)也相应的有了差异，设置了derate时余量更小。</p>
-<p>&emsp;&emsp;上面的时序检查的是setup time，可以看到报告中的Path Type是max，即setup time，这也是report_timing命令默认的Path Type，在使用report_timing命令时，可以在后面加上参数 -delay_type，然后通过将参数值设置为max或者min来选择看setup time还是hold time。</p>
-<h3 id="2-hold-time"><a href="#2-hold-time" class="headerlink" title="2.hold time"></a><strong>2.hold time</strong></h3><p>&emsp;&emsp;将delay_type设置为min，即可查看hold time的时序，最小延时通常出现在两个触发器之间，即从一个触发器的q端到另一个触发器的d端，因为两者之间没有逻辑，所以很容易出现hold time violation，如下图所示：</p>
-<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/hold.png" alt="hold"></p>
-<p>&emsp;&emsp;这里两级触发器之间的slack就非常小，不过还没有违例，如果出现了违例，修复的方法也很简单，在两级触发器之间插入buffer即可，插入buffer使用inser_buffer命令，后面跟要插入的pin和插入的buffer器件名称，这里需要在RD2WRT_D2_reg_0_/D前插入buffer，而插入的buffer可以在标准单元库中选一个，这里我从doc的标准单元目录中选用BUFX2，然后输入命令：</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert_buffer RD2WRT_D2_reg_0_/D BUFX2</span><br></pre></td></tr></table></figure>
+        <h3 id="一、形式验证简介"><a href="#一、形式验证简介" class="headerlink" title="一、形式验证简介"></a>一、形式验证简介</h3><p>&emsp;&emsp;在数字集成电路的设计流程中，我们需要多次验证设计的正确性，之前在前端完成RTL设计后，用VCS完成了功能验证(前仿)，而设计中还需要完成另一环验证，形式验证。与仿真不同的是，形式验证并非向电路中输入动态的激励来测试功能是否正确，而是通过纯数学的方法分析两个网表的逻辑是否等价，这是一种静态的比较，会遍历所有的输入组合，以保证逻辑的等价性。</p>
+<p>&emsp;&emsp;形式验证通常出现在两个地方，如下图：</p>
+<p><img src="/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/location.png" alt="location"></p>
+<p>&emsp;&emsp;第一个地方是在综合后，将综合后的网表与综合前的RTL代码进行对比，以确保综合过程中没有逻辑错误，RTL中一些特意设计的奇怪逻辑没有被优化掉。；第二个地方是在后端，将后端给出的网表与前端RTL或前端网表进行对比(这时前端RTL和网表已经等价)，验证后端有没有引入逻辑错误。此外，还有一个地方会用到形式验证，那就是在做ECO时。通常做ECO时，不仅要改网表，还需要同步地改动前端的RTL代码，那么自然在两者都进行改动后也需要做形式验证来保证等价。</p>
+<p>&emsp;&emsp;那么，形式验证究竟是如何比较的？这里就要提到形式验证中最基本的单元<strong>Mapping Point</strong>，所谓mapping point，就是两个网表/RTL中一一对应的点，通常是输入/输出，触发器，latch，Blackbox等。形式验证工具会首先将mapping point一一映射(默认是根据名字，也可根据功能来映射)，假设前端RTL中A1、B1两个点映射了后端网表中的A2、B2两个point，那么形式验证工具会向A1，A2遍历输入同样的输入组合，然后比对B1、B2的输出的结果，从而论证两对mapping point之间逻辑的等价性。需要注意的是，其中一对mapping point的mismatch并不会影响其之前或之后的mapping point的验证。</p>
+<h3 id="二、LEC形式验证流程"><a href="#二、LEC形式验证流程" class="headerlink" title="二、LEC形式验证流程"></a>二、LEC形式验证流程</h3><p>&emsp;&emsp;形式验证的工具有synopsys的Formality，Cadence的LEC。这里选用LEC，LEC工具本身将命令输入分为两种模式，从而也操作分为两个阶段，一个是setup mode，另一个是LEC mode。需要注意的是，LEC的命令格式也分为两种，一种是默认的vpxmode，运行效率较高，命令的不同部分用空格分隔；另一种格式是tclmode，也是DC、PT中的格式，命令的不同部分用下划线连接。这里我们用vpxmode，并通过do脚本批量执行命令。</p>
+<p>&emsp;&emsp;和前面的DC、PT一样，首先明确LEC输入和输出的文件：</p>
+<p>输入：</p>
+<ul>
+<li>需对比的两个文件，一个是标准的命名为golden(通常是rtl文件)，另一个待对比的revised(通常是网表)</li>
+<li>标准单元库的verilog model</li>
+<li>约束文件：pin constraint，blackbox等(blackbox是一些无需验证也无法验证的IP)</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>比较结果的报告</li>
+<li>保留数据的session文件</li>
+</ul>
+<p><strong>1.setup mode</strong></p>
+<p>&emsp;&emsp;setup mode要做的是配置形式验证环境，读入设计文件，设置参数。配置环境同DC、PT的第一步相同，主要是设置别名，创建文件目录。读入设计文件时，需要用read library读入标准单元库的Verilog model(如果有多个.v文件，需要一次性读入)，同read design读入待比较的两个文件,其中读入rtl文件时因为可能有多个.v文件，所以需要用root参数指定顶层模块。</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">read</span> library -Both -sensitive -Verilog /opt/Foundary_Library/TSMC90/aci/sc-x/verilog/tsmc090.v</span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span> design -systemverilog -Golden -sensitive -root $working_design -<span class="keyword">file</span> ./rtl/flist.f</span><br><span class="line"><span class="keyword">read</span> design -systemverilog -Revised -sensitive -root $working_design -<span class="keyword">file</span> ./rtl/$dc_design</span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;这样buffer就插入成功了，此时要查看buffer插入后的时序，再report_timing即可，但是要注意的是，插入buffer后刚才这条路径可能就不是最差的路径了，要再复现这条路径，需要用到-from和-to参数，指定路径的起点和终点，然后设置Path Type为min，这样就可以再次查看刚才插入buffer前的路径：</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">report_timing -from RD2WRT_D1_reg_0_ -to RD2WRT_D2_reg_0_ -delay_type min</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;最后再设置一些参数，并将一些特定的pin约束，如将RST、scan_mode设置为无效值：</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> flatten model -seq_merge -seq_constant -SEQ_Redundant</span><br><span class="line"><span class="keyword">set</span> datapath option -auto -verbose</span><br><span class="line"><span class="keyword">set</span> analyze option -auto</span><br><span class="line"><span class="keyword">set</span> flatten model -latch_transparent</span><br><span class="line"></span><br><span class="line">add pin constraints <span class="number">0</span> RST -Both</span><br><span class="line">//<span class="keyword">if</span> DFT exists </span><br><span class="line">//add pin constraints <span class="number">0</span> SCAN_MODE_REG[<span class="number">0</span>] -module scan_ctrl -Both</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/fix.png" alt="fix"></p>
-<p>&emsp;&emsp;在上图中的报告中可以看到，D1和D2两个触发器之间插入了一个BUFX2单元，最后的slack也比charubuffer前宽裕了</p>
-<hr>
-<p>&emsp;&emsp;实际上，PT完成静态时序分析后，我们主要是主要是修transition和hold time的violation，当前级负载过大时会使transition时间变长，这时可以在前级后插入buffer，这样前级就只需要驱动几个buffer，再由buffer去驱动后面的电路。修hold time同样也是通过插入buffer来实现。而如果有setup time的违例，可以将电路中的单元替换为标准单元库中速度更快的单元。</p>
-<p>&emsp;&emsp;PT能生成的报告还有很多，这里只选了其中的report_timing这一条命令来举例，很多其他的命令和报告也不了解，还需要慢慢学习。</p>
+<p><strong>2.LEC mode</strong></p>
+<p>&emsp;&emsp;LEC mode所执行的就是具体的比较命令了，我们首先要明确，比较的结果有以下几种：</p>
+<ul>
+<li>Equivalent </li>
+<li>Inverted-equivalent </li>
+<li>Sequential-merge </li>
+<li>Non-Equivalent </li>
+<li>Abort</li>
+</ul>
+<p>&emsp;&emsp;第一种equivalent自然就是相等。</p>
+<p>&emsp;&emsp;第二种inverterd-equivalent是指比较的两者在逻辑上完全相反，这种情况一般是因为某两个point之间的路径时序比较紧张，因而在优化时将路径中的一个反相器移到了后面的路径，这样对于外部电路来说逻辑是不变的，但是在做形式验证时在这两个point上就会得到inverted-equivalent的结果。要使LEC支持这种结果，需要在配置时加上set mapping method -phase 语句。</p>
+<p>&emsp;&emsp;第三种sequential-merge一般是RTL中的某些冗余、无效代码被优化掉了，但和网表在逻辑功能上等价。</p>
+<p>&emsp;&emsp;第四种则是两者不相等，而第五种通常是一些其他原因导致的验证失败。</p>
+<p>&emsp;&emsp;通过set system mode lec命令即可进入LEC mode，再使用compare命令即可进行比较。需要补充的两点，第一点是在终端输入lec启动时，最好加上-gxl参数(提高LEC性能)，第二点是LEC一般都用图形化界面，图形化界面也是默认启动的，在执行完脚本后能很方面地在mapping manager中查看验证的结果。</p>
 
       
     </div>
@@ -374,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="next" title="PT静态时序分析笔记（二）PT流程详解">
-                <i class="fa fa-chevron-left"></i> PT静态时序分析笔记（二）PT流程详解
+              <a href="/2020/08/12/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89PT%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90/" rel="next" title="PT静态时序分析笔记（三）PT报告分析">
+                <i class="fa fa-chevron-left"></i> PT静态时序分析笔记（三）PT报告分析
               </a>
             
           </div>
@@ -383,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/" rel="prev" title="LEC形式验证笔记">
-                LEC形式验证笔记 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -518,7 +533,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-setup-time"><span class="nav-number">1.</span> <span class="nav-text">1.setup time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-hold-time"><span class="nav-number">2.</span> <span class="nav-text">2.hold time</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、形式验证简介"><span class="nav-number">1.</span> <span class="nav-text">一、形式验证简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、LEC形式验证流程"><span class="nav-number">2.</span> <span class="nav-text">二、LEC形式验证流程</span></a></li></ol></div>
             
 
           </div>
