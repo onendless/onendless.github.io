@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="RISC-V," />
+  <meta name="keywords" content="数字集成电路," />
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。 &amp;emsp;&amp;emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，">
+<meta name="description" content="&amp;emsp;&amp;emsp;经过PT和后端的反复迭代，最终在PT中完成timing signoff之后，需要进行流片前的最后一次仿真，后仿。相比于对行为级RTL代码进行的前仿，后仿主要有以下几点不同：  后仿的对象是网表文件和标准单元库的Verilog model，前仿的对象是行为级RTL 后仿需要PT导出的SDF(Standard Delay File)文件 后仿更接近芯片的真实情况，消耗的时间也更">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RISC-V学习笔记（四）取指——概述">
-<meta property="og:url" content="https://yoursite.com/2020/06/05/RISC-V-4/index.html">
+<meta property="og:title" content="VCS后仿笔记">
+<meta property="og:url" content="https://yoursite.com/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。 &amp;emsp;&amp;emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;经过PT和后端的反复迭代，最终在PT中完成timing signoff之后，需要进行流片前的最后一次仿真，后仿。相比于对行为级RTL代码进行的前仿，后仿主要有以下几点不同：  后仿的对象是网表文件和标准单元库的Verilog model，前仿的对象是行为级RTL 后仿需要PT导出的SDF(Standard Delay File)文件 后仿更接近芯片的真实情况，消耗的时间也更">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-05T08:17:40.000Z">
-<meta property="article:modified_time" content="2020-06-05T15:52:27.301Z">
+<meta property="og:image" content="https://yoursite.com/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/sdf.png">
+<meta property="og:image" content="https://yoursite.com/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/delay.png">
+<meta property="article:published_time" content="2020-08-16T07:11:58.000Z">
+<meta property="article:modified_time" content="2020-08-16T09:19:42.218Z">
 <meta property="article:author" content="Onendless">
-<meta property="article:tag" content="RISC-V">
+<meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yoursite.com/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/sdf.png">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/05/RISC-V-4/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/08/16/VCS后仿笔记/"/>
 
 
 
 
 
-  <title>RISC-V学习笔记（四）取指——概述 | Onendless</title>
+  <title>VCS后仿笔记 | Onendless</title>
   
 
 
@@ -233,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/05/RISC-V-4/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -250,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">RISC-V学习笔记（四）取指——概述</h1>
+          <h1 class="post-title" itemprop="name headline">VCS后仿笔记</h1>
         
 
         <div class="post-meta">
@@ -262,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-05T16:17:40+08:00">
-                2020-06-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-16T15:11:58+08:00">
+                2020-08-16
               </time>
             
 
@@ -285,8 +288,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RISC-V/" itemprop="url" rel="index">
-                    <span itemprop="name">RISC-V</span>
+                  <a href="/categories/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">数字集成电路</span>
                   </a>
                 </span>
 
@@ -322,32 +325,32 @@
       
 
       
-        <p>&emsp;&emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。</p>
-<p>&emsp;&emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，而这两个指标，主要涉及到3个问题：</p>
-<blockquote>
+        <p>&emsp;&emsp;经过PT和后端的反复迭代，最终在PT中完成timing signoff之后，需要进行流片前的最后一次仿真，后仿。相比于对行为级RTL代码进行的前仿，后仿主要有以下几点不同：</p>
 <ul>
-<li>如何快速取指。</li>
-<li>如何处理非对齐指令。</li>
-<li>如何处理分支指令。</li>
+<li>后仿的对象是网表文件和标准单元库的Verilog model，前仿的对象是行为级RTL</li>
+<li>后仿需要PT导出的SDF(Standard Delay File)文件</li>
+<li>后仿更接近芯片的真实情况，消耗的时间也更长</li>
 </ul>
-</blockquote>
-<p><strong>1. 如何快速取指</strong></p>
-<p>&emsp;&emsp;快速取指的方法通常有两个，第一是使用ITCM（instruction tightly coupled memory&ensp;指令紧耦合存储器），应该类似于or1200中的QMEM，通过设计一个在物理上离处理器核很近的小容量存储器来实现较短的访问延迟，由于容量较小，通常用来存储一些关键指令。而第二个方法，就是使用Cache，关于Cache的知识比较复杂，应该会在后面的笔记中单独探究，这里不再赘述。</p>
-<p>&emsp;&emsp;通常低功耗处理器倾向于使用延迟确定的ITCM。</p>
-<p><strong>2. 如何处理非对齐指令</strong></p>
-<p>&emsp;&emsp;所谓取指的连续不断，即每个周期读出一条完整的指令，而之所以会出现每个周期不能读出一条完整的指令，由两个原因造成：其一，指令存储器通常使用SRAM，SRAM的读端口宽度往往是固定的，以32位SRAM为例，每次必须读出32位的指令；其二，指令的宽度并不固定，可能是32位，也可能是16位。</p>
-<p>&emsp;&emsp;那么问题就显而易见了，指令在存储器中是连续存放的，如果某一次取指，32位中低16位是一条完整的16位指令，而高16位是一条32位指令的低16位部分，那么要完整地取出这条32位指令，就需要两个取指周期，取出两组32位指令，各取一部分拼接出完整的32位指令。所谓的非对齐指令，即某一条32位指令的地址不能被4整除，也就是说没有对齐SRAM每次读操作的地址边界，从而不能从SRAM中一次读出。</p>
-<p>&emsp;&emsp;而解决非对齐指令的方法有两个：</p>
-<blockquote>
+<p>&emsp;&emsp;后仿与前仿也有相同之处：</p>
 <ul>
-<li>对于普通指令的非对齐情况，可以使用剩余缓存，即将上一次取指后没有用到的高16位暂存在缓存中，待下个周期取出另外16位之后即可马上拼接出完整的32位指令。</li>
-<li>对于分支跳转指令的非对齐情况，跳转之后的取出的指令显然无法使用前一条指令的剩余缓存，因此剩余缓存的方法并不适用，常见的方法是使用多体（Bank）化的SRAM，将连续的32位指令在两块SRAM中交错存储，对于非对齐的32位指令，通过同时读两块SRAM，各取一部分拼凑出完整指令。</li>
+<li>后仿与前仿的testbench几乎相同，都是在initial块中输入测试激励，只是后仿的testbench中多了一个时序反标</li>
+<li>具体到操作中，后仿和前仿的脚本和文件结构也相同，但是后仿的filelist中要加入标准单元库的Verilog model。</li>
 </ul>
-</blockquote>
-<p><strong>3. 如何处理分支指令</strong></p>
-<p>&emsp;&emsp;分支问题，其实就是两个问题，第一，跳还是不跳，第二，往哪跳。</p>
-<p>&emsp;&emsp;其中跳还是不跳涉及到带条件跳转指令的分支预测，在取指阶段处理器无法知道跳转条件是否成立，也就无法确定下一条指令的地址，只有等到执行阶段完成后才能知道最终的跳转结果，如果将取指暂停，等待执行阶段结束再进行下一次取指，将造成流水线的浪费，无条件跳转指令则自然没有这个问题；而往哪跳，则涉及到目标地址的计算，无论是使用立即数作为偏移量的直接跳转指令，还是使用寄存器索引的操作数加上立即数作偏移量的间接跳转指令，都要到执行阶段才能计算出分支目标地址。</p>
-<p>&emsp;&emsp;这两个问题的解决，也就是分支预测技术中的预测方向和预测地址，在下一篇笔记中再具体探讨。</p>
+<p>&emsp;&emsp;后仿中，有以下几点要注意一下：</p>
+<p><strong>1.testbench中时钟的设置</strong></p>
+<p>&emsp;&emsp;因为在PT中做时序分析时对时钟已经做了约束，所以后仿时设置的时钟要和PT中的时钟约束相符合，如果PT中时钟的约束周期为10ns，在5ns时翻转，那么相应地testbench中的时钟就也要设置为 #5 clk =~clk。</p>
+<p>&emsp;&emsp;另一点是，后仿中的timescale要Verilog Model一致，因为PT所用的timescale也来自于Verilog model，具体的timescale可以在标准单元库的.v文件中看到。</p>
+<p><strong>2.时序反标</strong></p>
+<p>&emsp;&emsp;后仿之所以更接近真实芯片的延时，是因为将PT得出的SDF文件中包含的延时都标注在了网表的每一个cell上，这一步通过testbench中的annotate来实现。注意反标的目标是testbench中例化的顶层文件DUT</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">  $sdf_annotate(<span class="string">"post_netlist/plus_pipe.sdf"</span>,testbench<span class="variable">.DUT</span>, , ,<span class="string">"maximum"</span>, , );</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>&emsp;&emsp;下面用一个具体的案例来分析后仿中的延时，以64位流水线加法器为例。首先看一下sdf文件中具体对延时的描述：</p>
+<p><img src="/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/sdf.png" alt="sdf"></p>
+<p>&emsp;&emsp;图中有两个cell的延时信息，第一个是cell的CELLTYPE表明了它是一个反相器，延时信息中IOPATH表明了输入输出的端点，第一个括号中是上升的延时，第二个括号中是下降的延时，两个括号中的两个延时都是前一个表示最小延时，后一个表示最大延时(中间省略了一个typical延时)，具体反标时选择最大还是最小延时由annotate的参数决定。而第二个cell是一个触发器，触发器的sdf信息中还包含了一些setup、hold以及clk，rst最小宽度的限制等。</p>
+<p>&emsp;&emsp;需要补充的是，实际上我做PT时只扫了一个corner，那么sdf中的最小延时和最大延时应该相同，而这里之所以不同是因为引入了derate，如果把derate系数除去可以看到最小延时和最大延时是相同的。</p>
+<p>&emsp;&emsp;根据sdf可以明确，U6的上升沿延时应该是0.0669ns，再来看VCS中的波形，可以看到，U6这一个反相器的上升延时位67ps，sdf中的延时的确反标到了网表中</p>
+<p><img src="/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/delay.png" alt="delay"></p>
+<p>&emsp;&emsp;在做仿真时的一个插曲是testbench中的sdf文件路径写错了，导致vcs仿真时所有的触发器都报了hold time violation，而打开verdi后看到所有的上升沿下降沿延时都是1ns，应该在没找到sdf文件时采用了仿真器自带的时序约束，而实际上sdf文件中timing check的优先级更高，在正确读入sdf文件后就没有报violation了。</p>
 
       
     </div>
@@ -365,7 +368,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/RISC-V/" rel="tag"># RISC-V</a>
+            <a href="/tags/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF/" rel="tag"># 数字集成电路</a>
           
         </div>
       
@@ -378,8 +381,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/01/RISC-V-3/" rel="next" title="RISC-V学习笔记（三）处理器流水线简述">
-                <i class="fa fa-chevron-left"></i> RISC-V学习笔记（三）处理器流水线简述
+              <a href="/2020/08/14/LEC%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%AC%94%E8%AE%B0/" rel="next" title="LEC形式验证笔记">
+                <i class="fa fa-chevron-left"></i> LEC形式验证笔记
               </a>
             
           </div>
@@ -387,10 +390,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/06/RISC-V-5/" rel="prev" title="RISC-V学习笔记（五）取指——分支预测">
-                RISC-V学习笔记（五）取指——分支预测 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

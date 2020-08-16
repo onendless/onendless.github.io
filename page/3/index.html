@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="RISC-V," />
+  <meta name="keywords" content="Hello, Onendless" />
 
 
 
@@ -79,17 +79,12 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。 &amp;emsp;&amp;emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="RISC-V学习笔记（四）取指——概述">
-<meta property="og:url" content="https://yoursite.com/2020/06/05/RISC-V-4/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Onendless">
+<meta property="og:url" content="https://yoursite.com/page/3/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。 &amp;emsp;&amp;emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-05T08:17:40.000Z">
-<meta property="article:modified_time" content="2020-06-05T15:52:27.301Z">
 <meta property="article:author" content="Onendless">
-<meta property="article:tag" content="RISC-V">
 <meta name="twitter:card" content="summary">
 
 
@@ -120,13 +115,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/05/RISC-V-4/"/>
+  <link rel="canonical" href="https://yoursite.com/page/3/"/>
 
 
 
 
 
-  <title>RISC-V学习笔记（四）取指——概述 | Onendless</title>
+  <title>Onendless</title>
   
 
 
@@ -145,7 +140,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -218,9 +214,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -233,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/05/RISC-V-4/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/05/30/Begin%20Again/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -250,7 +246,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">RISC-V学习笔记（四）取指——概述</h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/30/Begin%20Again/" itemprop="url">Begin Again</a></h1>
         
 
         <div class="post-meta">
@@ -262,8 +260,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-05T16:17:40+08:00">
-                2020-06-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-30T16:52:32+08:00">
+                2020-05-30
               </time>
             
 
@@ -285,8 +283,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/RISC-V/" itemprop="url" rel="index">
-                    <span itemprop="name">RISC-V</span>
+                  <a href="/categories/%E6%9D%82%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">杂记</span>
                   </a>
                 </span>
 
@@ -322,33 +320,18 @@
       
 
       
-        <p>&emsp;&emsp;处理器流水线中的第一步——取指，即按照PC值指定的地址去程序存储器中取出指令，由于程序存储器的存储单元以一个字节（8 bit）为单位，而通常一条指令是32位，即一条指令会占用四个存储单元，因此，每次取指后，PC值会自动加4，以指向下一条指令的地址，当然，如果指令是16位，那么相应的PC值就会加2。</p>
-<p>&emsp;&emsp;根据书中陈述，取指的核心要点是“快”和“连续不断”，而这两个指标，主要涉及到3个问题：</p>
-<blockquote>
-<ul>
-<li>如何快速取指。</li>
-<li>如何处理非对齐指令。</li>
-<li>如何处理分支指令。</li>
-</ul>
-</blockquote>
-<p><strong>1. 如何快速取指</strong></p>
-<p>&emsp;&emsp;快速取指的方法通常有两个，第一是使用ITCM（instruction tightly coupled memory&ensp;指令紧耦合存储器），应该类似于or1200中的QMEM，通过设计一个在物理上离处理器核很近的小容量存储器来实现较短的访问延迟，由于容量较小，通常用来存储一些关键指令。而第二个方法，就是使用Cache，关于Cache的知识比较复杂，应该会在后面的笔记中单独探究，这里不再赘述。</p>
-<p>&emsp;&emsp;通常低功耗处理器倾向于使用延迟确定的ITCM。</p>
-<p><strong>2. 如何处理非对齐指令</strong></p>
-<p>&emsp;&emsp;所谓取指的连续不断，即每个周期读出一条完整的指令，而之所以会出现每个周期不能读出一条完整的指令，由两个原因造成：其一，指令存储器通常使用SRAM，SRAM的读端口宽度往往是固定的，以32位SRAM为例，每次必须读出32位的指令；其二，指令的宽度并不固定，可能是32位，也可能是16位。</p>
-<p>&emsp;&emsp;那么问题就显而易见了，指令在存储器中是连续存放的，如果某一次取指，32位中低16位是一条完整的16位指令，而高16位是一条32位指令的低16位部分，那么要完整地取出这条32位指令，就需要两个取指周期，取出两组32位指令，各取一部分拼接出完整的32位指令。所谓的非对齐指令，即某一条32位指令的地址不能被4整除，也就是说没有对齐SRAM每次读操作的地址边界，从而不能从SRAM中一次读出。</p>
-<p>&emsp;&emsp;而解决非对齐指令的方法有两个：</p>
-<blockquote>
-<ul>
-<li>对于普通指令的非对齐情况，可以使用剩余缓存，即将上一次取指后没有用到的高16位暂存在缓存中，待下个周期取出另外16位之后即可马上拼接出完整的32位指令。</li>
-<li>对于分支跳转指令的非对齐情况，跳转之后的取出的指令显然无法使用前一条指令的剩余缓存，因此剩余缓存的方法并不适用，常见的方法是使用多体（Bank）化的SRAM，将连续的32位指令在两块SRAM中交错存储，对于非对齐的32位指令，通过同时读两块SRAM，各取一部分拼凑出完整指令。</li>
-</ul>
-</blockquote>
-<p><strong>3. 如何处理分支指令</strong></p>
-<p>&emsp;&emsp;分支问题，其实就是两个问题，第一，跳还是不跳，第二，往哪跳。</p>
-<p>&emsp;&emsp;其中跳还是不跳涉及到带条件跳转指令的分支预测，在取指阶段处理器无法知道跳转条件是否成立，也就无法确定下一条指令的地址，只有等到执行阶段完成后才能知道最终的跳转结果，如果将取指暂停，等待执行阶段结束再进行下一次取指，将造成流水线的浪费，无条件跳转指令则自然没有这个问题；而往哪跳，则涉及到目标地址的计算，无论是使用立即数作为偏移量的直接跳转指令，还是使用寄存器索引的操作数加上立即数作偏移量的间接跳转指令，都要到执行阶段才能计算出分支目标地址。</p>
-<p>&emsp;&emsp;这两个问题的解决，也就是分支预测技术中的预测方向和预测地址，在下一篇笔记中再具体探讨。</p>
-
+        
+          
+          &emsp;&emsp;最近借着学习RISC-V做笔记的契机，又开始写博客了，从2017年到现在，断断续续地做过几次博客，但自身问题实在太多。其一是所知甚少而注意力又太分散，学习技术时中途涉及到其他不
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/30/Begin%20Again/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
       
     </div>
     
@@ -363,40 +346,14 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/RISC-V/" rel="tag"># RISC-V</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/06/01/RISC-V-3/" rel="next" title="RISC-V学习笔记（三）处理器流水线简述">
-                <i class="fa fa-chevron-left"></i> RISC-V学习笔记（三）处理器流水线简述
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/06/RISC-V-5/" rel="prev" title="RISC-V学习笔记（五）取指——分支预测">
-                RISC-V学习笔记（五）取指——分支预测 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -406,11 +363,14 @@
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
 
 
           </div>
@@ -418,10 +378,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -637,10 +593,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
