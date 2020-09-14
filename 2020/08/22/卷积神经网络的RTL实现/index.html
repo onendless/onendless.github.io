@@ -79,21 +79,20 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;今天写分频器时一时又想不清楚偶数分频器的计数长度为什么是N&#x2F;2 - 1了，索性记录一下。 &amp;emsp;&amp;emsp;因为是偶数分频，不需要考虑占空比问题，只需要一个计数器就可以实现，以10分频为例 1234567891011121314151617always@(posedge CLK_100M or negedge RST_N)begin  if(!RST_N)     c">
+<meta name="description" content="&amp;emsp;&amp;emsp;最近复习一下神经网络，也读了几篇论文学习了一下神经网络具体的RTL实现，这里简要记录一下 一、基本运算单元&amp;emsp;1.并行乘法器+加法树 &amp;emsp;&amp;emsp;总的来说，卷积神经网络中的卷积层，池化层，全连接层都是由大量的乘加运算构成，而为了能适用于电路，激活层可以选用relu函数，不需要sigmoid的指数运算。那么自然，实际的电路就是由大量的乘法器和加法器，以及存">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Verilog笔记（三）偶数分频器">
-<meta property="og:url" content="https://yoursite.com/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/index.html">
+<meta property="og:title" content="卷积神经网络的RTL实现">
+<meta property="og:url" content="https://yoursite.com/2020/08/22/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84RTL%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;今天写分频器时一时又想不清楚偶数分频器的计数长度为什么是N&#x2F;2 - 1了，索性记录一下。 &amp;emsp;&amp;emsp;因为是偶数分频，不需要考虑占空比问题，只需要一个计数器就可以实现，以10分频为例 1234567891011121314151617always@(posedge CLK_100M or negedge RST_N)begin  if(!RST_N)     c">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;最近复习一下神经网络，也读了几篇论文学习了一下神经网络具体的RTL实现，这里简要记录一下 一、基本运算单元&amp;emsp;1.并行乘法器+加法树 &amp;emsp;&amp;emsp;总的来说，卷积神经网络中的卷积层，池化层，全连接层都是由大量的乘加运算构成，而为了能适用于电路，激活层可以选用relu函数，不需要sigmoid的指数运算。那么自然，实际的电路就是由大量的乘法器和加法器，以及存">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/%E9%94%99%E8%AF%AF%E6%B3%A2%E5%BD%A2.png">
-<meta property="og:image" content="https://yoursite.com/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/%E6%AD%A3%E7%A1%AE%E6%B3%A2%E5%BD%A2.png">
-<meta property="article:published_time" content="2020-06-16T12:54:09.000Z">
-<meta property="article:modified_time" content="2020-07-23T10:41:06.545Z">
+<meta property="og:image" content="https://yoursite.com/2020/08/22/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84RTL%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E6%A0%91.png">
+<meta property="article:published_time" content="2020-08-22T13:39:21.000Z">
+<meta property="article:modified_time" content="2020-09-14T14:54:49.321Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/%E9%94%99%E8%AF%AF%E6%B3%A2%E5%BD%A2.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/08/22/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84RTL%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E6%A0%91.png">
 
 
 
@@ -123,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/06/16/偶数分频器/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/08/22/卷积神经网络的RTL实现/"/>
 
 
 
 
 
-  <title>Verilog笔记（三）偶数分频器 | Onendless</title>
+  <title>卷积神经网络的RTL实现 | Onendless</title>
   
 
 
@@ -236,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/22/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84RTL%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -253,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Verilog笔记（三）偶数分频器</h1>
+          <h1 class="post-title" itemprop="name headline">卷积神经网络的RTL实现</h1>
         
 
         <div class="post-meta">
@@ -265,8 +264,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-16T20:54:09+08:00">
-                2020-06-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-22T21:39:21+08:00">
+                2020-08-22
               </time>
             
 
@@ -325,12 +324,17 @@
       
 
       
-        <p>&emsp;&emsp;今天写分频器时一时又想不清楚偶数分频器的计数长度为什么是N/2 - 1了，索性记录一下。</p>
-<p>&emsp;&emsp;因为是偶数分频，不需要考虑占空比问题，只需要一个计数器就可以实现，以10分频为例</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> CLK_100M <span class="keyword">or</span> <span class="keyword">negedge</span> RST_N)<span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">if</span>(!RST_N)</span><br><span class="line">     cnt_10M &lt;= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(cnt_10M == <span class="number">5</span>)</span><br><span class="line">    cnt_10M &lt;= <span class="number">0</span>; </span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    cnt_10M &lt;= cnt_10M + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> CLK_100M <span class="keyword">or</span> <span class="keyword">negedge</span> RST_N)<span class="keyword">begin</span></span><br><span class="line">  <span class="keyword">if</span>(!RST_N)</span><br><span class="line">    CLK_10M &lt;= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(cnt_10M == <span class="number">5</span>)</span><br><span class="line">    CLK_10M &lt;= ~CLK_10M;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    CLK_10M &lt;= CLK_10M;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-
-<p>如果计数到5反转一次，得到的波形图实际上如下图所示<br><img src="/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/%E9%94%99%E8%AF%AF%E6%B3%A2%E5%BD%A2.png" alt></p>
-<p>可以看到，计数到5，实际上是经过了6个时钟周期。容易误解的是，计数器计数到5时，并没有立刻置零，而是在下一个周期检测到计数器为5时，才置零，并进行翻转，因此实际上计数器为0时也经过了一个周期。将计数器设置为计N/2 -1，在这一case中即是4，就可得到正确的分频波形。<br><img src="/2020/06/16/%E5%81%B6%E6%95%B0%E5%88%86%E9%A2%91%E5%99%A8/%E6%AD%A3%E7%A1%AE%E6%B3%A2%E5%BD%A2.png" alt></p>
+        <p>&emsp;&emsp;最近复习一下神经网络，也读了几篇论文学习了一下神经网络具体的RTL实现，这里简要记录一下</p>
+<h3 id="一、基本运算单元"><a href="#一、基本运算单元" class="headerlink" title="一、基本运算单元"></a>一、基本运算单元</h3><p>&emsp;<strong>1.并行乘法器+加法树</strong></p>
+<p>&emsp;&emsp;总的来说，卷积神经网络中的卷积层，池化层，全连接层都是由大量的乘加运算构成，而为了能适用于电路，激活层可以选用relu函数，不需要sigmoid的指数运算。那么自然，实际的电路就是由大量的乘法器和加法器，以及存储数据的内存构成。RTL实现时，主要考虑的是运算资源的耗费和网络的吞吐量，具体一点来说，就是并行运算和内存带宽的trade-off，并行运算越多，理论上速度更快，吞吐量更大，但耗费的资源越多，需要的内存带宽也更大。</p>
+<p>&emsp;&emsp;而主要的优化设计，集中在对乘法的优化这一块。加法都是使用加法树来实现，如下图所示</p>
+<p><img src="/2020/08/22/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84RTL%E5%AE%9E%E7%8E%B0/%E5%8A%A0%E6%B3%95%E6%A0%91.png" alt="加法树"></p>
+<p>&emsp;&emsp;设卷积核大小为 K × K ，先将等待进行加法运算的K<sup>2</sup>个乘积结果通过补零扩展到2<sup>[log<sub>2</sub>{k<sup>2</sup>}]</sup>个(这里对log的结果取整)，然后两两通过全加器相加，加和结果作为下一层的输入，这样总共耗费[K<sup>2</sup>]-1个全加器，需要[log<sub>2</sub>{k<sup>2</sup>}]个时钟周期。</p>
+<p>&emsp;<strong>2.浮点数转定点数</strong></p>
+<p>&emsp;&emsp;在电路的RTL实现中还有一点是，神经网络中的乘加运算是浮点数运算，而如果要用电路实现，需要耗费更多资源和时间，因此采用定点数来近似浮点数，即量化浮点数。首先将浮点数乘一定倍数转换为整型，然后再转换为二进制，完成运算后再除以一定倍数还原为浮点数，只要量化的位数达到一定bit，对模型精度的影响就非常小，以9bit的量化为例，原浮点数为-0.09011722, 乘256后取整可以得到23，再转换为二进制即得到111101001。</p>
+<h3 id="二、并行运算优化"><a href="#二、并行运算优化" class="headerlink" title="二、并行运算优化"></a>二、并行运算优化</h3><p>&emsp;&emsp;四个地方的乘法可以并行，卷积核内并行，通道并行（输入通道并行），卷积核间并行（输出通道并行），卷积窗口并行</p>
+<p>&emsp;&emsp;相邻卷积窗口数据重复率</p>
+<h3 id="三、内存带宽优化"><a href="#三、内存带宽优化" class="headerlink" title="三、内存带宽优化"></a>三、内存带宽优化</h3><p>&emsp;&emsp;updating…………………….</p>
 
       
     </div>
@@ -361,8 +365,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/14/%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E8%B5%8B%E5%80%BC%E4%B8%AD%E7%9A%84%E5%BB%B6%E6%97%B6/" rel="next" title="Verilog笔记（二）阻塞与非阻塞赋值中的延时">
-                <i class="fa fa-chevron-left"></i> Verilog笔记（二）阻塞与非阻塞赋值中的延时
+              <a href="/2020/08/16/VCS%E5%90%8E%E4%BB%BF%E7%AC%94%E8%AE%B0/" rel="next" title="VCS后仿笔记">
+                <i class="fa fa-chevron-left"></i> VCS后仿笔记
               </a>
             
           </div>
@@ -370,10 +374,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/06/%E5%8A%A0%E6%B3%95%E5%99%A8%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%AE%9E%E7%8E%B0/" rel="prev" title="Verilog笔记（四）加法器的流水线实现">
-                Verilog笔记（四）加法器的流水线实现 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -425,8 +425,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -486,6 +495,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、基本运算单元"><span class="nav-number">1.</span> <span class="nav-text">一、基本运算单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、并行运算优化"><span class="nav-number">2.</span> <span class="nav-text">二、并行运算优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、内存带宽优化"><span class="nav-number">3.</span> <span class="nav-text">三、内存带宽优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
