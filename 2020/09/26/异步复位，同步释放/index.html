@@ -79,22 +79,21 @@
 
 
 
-<meta name="description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
+<meta name="description" content="一、异步复位与同步复位&amp;emsp;&amp;emsp;在电路中设计复位功能时，有异步复位与同步复位两种方式，异步复位在复位信号有效时就会立即将触发器复位，而同步复位在复位信号有效时，需要等到时钟沿到来后才能将触发器复位。下面从两个方面来进一步叙述同步复位和异步复位的不同 &amp;emsp;&amp;emsp;首先是verilog代码的不同 123456789101112131415&#x2F;&#x2F;同步复位always@(posed">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PT静态时序分析笔记（一）综述">
-<meta property="og:url" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/index.html">
+<meta property="og:title" content="异步复位，同步释放">
+<meta property="og:url" content="https://yoursite.com/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/index.html">
 <meta property="og:site_name" content="Onendless">
-<meta property="og:description" content="一、静态时序分析简介&amp;emsp;&amp;emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对同步电路中所有的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：   分析电路最高时钟频率  检查设计在">
+<meta property="og:description" content="一、异步复位与同步复位&amp;emsp;&amp;emsp;在电路中设计复位功能时，有异步复位与同步复位两种方式，异步复位在复位信号有效时就会立即将触发器复位，而同步复位在复位信号有效时，需要等到时钟沿到来后才能将触发器复位。下面从两个方面来进一步叙述同步复位和异步复位的不同 &amp;emsp;&amp;emsp;首先是verilog代码的不同 123456789101112131415&#x2F;&#x2F;同步复位always@(posed">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png">
-<meta property="og:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png">
-<meta property="article:published_time" content="2020-08-08T08:26:09.000Z">
-<meta property="article:modified_time" content="2020-08-08T09:39:26.385Z">
+<meta property="og:image" content="https://yoursite.com/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/sync_reset.png">
+<meta property="og:image" content="https://yoursite.com/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/sync_release.png">
+<meta property="article:published_time" content="2020-09-26T05:33:35.000Z">
+<meta property="article:modified_time" content="2020-09-26T07:03:49.484Z">
 <meta property="article:author" content="Onendless">
 <meta property="article:tag" content="数字集成电路">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png">
+<meta name="twitter:image" content="https://yoursite.com/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/sync_reset.png">
 
 
 
@@ -124,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://yoursite.com/2020/08/08/PT静态时序分析笔记（一）综述/"/>
+  <link rel="canonical" href="https://yoursite.com/2020/09/26/异步复位，同步释放/"/>
 
 
 
 
 
-  <title>PT静态时序分析笔记（一）综述 | Onendless</title>
+  <title>异步复位，同步释放 | Onendless</title>
   
 
 
@@ -237,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="https://yoursite.com/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Onendless">
@@ -254,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PT静态时序分析笔记（一）综述</h1>
+          <h1 class="post-title" itemprop="name headline">异步复位，同步释放</h1>
         
 
         <div class="post-meta">
@@ -266,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-08T16:26:09+08:00">
-                2020-08-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-26T13:33:35+08:00">
+                2020-09-26
               </time>
             
 
@@ -326,48 +325,36 @@
       
 
       
-        <h3 id="一、静态时序分析简介"><a href="#一、静态时序分析简介" class="headerlink" title="一、静态时序分析简介"></a>一、静态时序分析简介</h3><p>&emsp;&emsp;在数字集成电路的设计流程中，完成了逻辑综合后，需要进行后端的P&amp;R，随后用经过P&amp;R得到的后端网表来进行STA(静态时序分析)。STA通过工具对<strong>同步电路</strong>中<strong>所有</strong>的时序路径进行分析，检查是否有时序违例，而对于异步电路，由于时钟之间的相互关系不确定，也就不存在STA了。STA所实现的作用，主要是以下几点：</p>
+        <h2 id="一、异步复位与同步复位"><a href="#一、异步复位与同步复位" class="headerlink" title="一、异步复位与同步复位"></a>一、异步复位与同步复位</h2><p>&emsp;&emsp;在电路中设计复位功能时，有异步复位与同步复位两种方式，异步复位在复位信号有效时就会立即将触发器复位，而同步复位在复位信号有效时，需要等到时钟沿到来后才能将触发器复位。下面从两个方面来进一步叙述同步复位和异步复位的不同</p>
+<p>&emsp;&emsp;首先是verilog代码的不同</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步复位</span></span><br><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> clk)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        q &lt;= <span class="number">1'b0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        q &lt;= d;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//异步复位</span></span><br><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(!rst_n)</span><br><span class="line">        q &lt;= <span class="number">1'b0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        q &lt;= d;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到，同步复位和异步复位的敏感列表不同，同步复位只能由时钟沿来触发，而异步复位可以由复位信号触发。</p>
+<p>&emsp;&emsp;其次从综合出来的电路来看，两者也不同。异步复位综合时，会从标准单元库中选用带有复位端的触发器，而同步复位综合时，实际上是在触发器的D端前加入了一段复位控制的组合逻辑，如下图所示(图源：知乎@李虹江)：</p>
+<p><img src="/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/sync_reset.png" alt="sync_reset"></p>
+<p>&emsp;&emsp;那么，同步复位和异步复位各自的优劣也就显而易见了：</p>
 <blockquote>
 <ul>
-<li>分析电路最高时钟频率 </li>
-<li>检查设计在所有corner下均能时序收敛</li>
-<li>分析时钟的偏移、不平衡等各种因素对电路时序的影响</li>
+<li>延时:异步复位不会引入额外的组合逻辑延时，在时序上会比同步复位更好</li>
+<li>亚稳态：同步复位的复位信号在datapath中，也会被STA约束，能保证触发器不会因reset信号而引入亚稳态，而异步复位信号则可能会引入亚稳态，同时也无法过滤毛刺</li>
 </ul>
 </blockquote>
-<p>&emsp;&emsp;具体来说，STA要做的，就是扫PVT(process,voltage,temprature)，即分析在不同的PVT下时序是否收敛。</p>
-<ul>
-<li><p>在工艺方面，由于工艺偏差，即使在同一个wafer上，不同位置的器件也会在诸如阈值电压等参数上出现差异，通常对于这些参数上的差异，用tt表示均值，ss表示最小限制值，即在这一corner下电路最慢，ff表示最大限制值，在这一corner下电路能跑到最快。</p>
-</li>
-<li><p>而由于电源的不稳定和后端的IR-drop等因素，也会使芯片的工作电压相较预期出现差异，通常用0.9VDD，VDD，1.1VDD来模拟。</p>
-</li>
-<li><p>芯片工作时的温度通常分为-40，-10，70，125几个温度，在这几个温度下分别检查时序能否收敛。</p>
-</li>
-</ul>
-<p>&emsp;&emsp;以标准单元库中的ss和ff两个PVT为示例，如下图</p>
-<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/corner.png" alt="corner"></p>
-<p>&emsp;&emsp;在低温高电压下电路频率能达到最高，在高温低电压下电路频率最低。</p>
-<h3 id="二、静态时序分析基本流程"><a href="#二、静态时序分析基本流程" class="headerlink" title="二、静态时序分析基本流程"></a>二、静态时序分析基本流程</h3><p>&emsp;&emsp;静态时序分析实际上和DC综合十分类似，先来看STA读入和输出的文件：</p>
+<p>&emsp;&emsp;为了能同时利用到同步复位稳定的特性，又能像异步复位一样节约电路资源，通常采用异步复位，同步释放的方法。</p>
+<h2 id="二、异步复位，同步释放"><a href="#二、异步复位，同步释放" class="headerlink" title="二、异步复位，同步释放"></a>二、异步复位，同步释放</h2><p>&emsp;&emsp;首先明确复位的两个关键节点，一个是<strong>reset assertion</strong>，即复位信号变为有效的时刻，一个是<strong>reset release</strong>，即复位信号变为无效的时刻，所谓异步复位，同步释放，就是指reset assertion的到来可以是异步的，但reset release一定要与时钟同步。至于为什么要对reset release做更严格的同步要求，简而言之，当reset assertion到来后，触发器的Q端输出就稳定在0，与时钟沿以及datapath上的其他信号都无关，而当reset release时，触发器的Q端就取决于datapath上的信号，如果reset release在时钟上升沿到来，一旦release，触发器在时钟沿去读取datapath上的信号，就会产生亚稳态。</p>
+<p>&emsp;&emsp;既然reset release关系到数据打入触发器的时间点，那么自然在STA中也需要对应的参数来对release进行check，一个是recovery time，是要求release点距离下一个时钟沿的最小间隔，类似于setup time；另一个是removal time，是要求release点距离上一个时钟沿的最小间隔，类似于hold time。不过在这里我们并不需要考虑怎样去满足removal time和recovery time，我们只需让release和时钟同步，而后让datapath上的信号满足时序约束就行了。</p>
+<p>&emsp;&emsp;该如何让异步的reset release变成与时钟同步的信号？在电路中，与时钟同步的，就是触发器的Q端输出信号了，因此我们要做的就是将触发器reset端输入的信号转换为触发器Q端输出的信号，具体的电路如下图所示(图源不详)：</p>
+<p><img src="/2020/09/26/%E5%BC%82%E6%AD%A5%E5%A4%8D%E4%BD%8D%EF%BC%8C%E5%90%8C%E6%AD%A5%E9%87%8A%E6%94%BE/sync_release.png" alt="sync_release"></p>
+<p>&emsp;&emsp;其中框图1是异步复位同步释放的电路，框图2是接收复位信号的触发器。框图1中，触发器1的D端接电源，即置1，当异步复位信号assert时，经过两个触发器的内部延时，会立刻向框图2中的系统输出异步复位信号。而当异步复位信号release时，触发器的Q端并不会立刻恢复到1，而是等时钟沿到来之后，才会变成1，实现同步释放。这里框图1中的第一个触发器，可能在release时会产生亚稳态，但第二个触发器D端此时接收到的信号仍是0，等到下一拍，触发器1的状态稳定下来，触发器2的D端接收到的就是与时钟同步的1’b1,也就能输出同步的release信号了。</p>
+<p>&emsp;&emsp;具体的异步复位同步释放verilog代码实现如下：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">always</span>@(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(!rst_n)<span class="keyword">begin</span></span><br><span class="line">        q1 &lt;= <span class="number">1'b0</span>;</span><br><span class="line">        q2 &lt;= <span class="number">1'b0</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">        q1 &lt;= <span class="number">1'b1</span>;</span><br><span class="line">        q2 &lt;= q1;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> sync_rst = q2;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;总结一下，异步复位同步释放电路的设计要点：</p>
 <blockquote>
-<p>STA所需要的文件：</p>
 <ul>
-<li>后端网表和SPEF文件</li>
-<li>标准单元库文件</li>
-<li>其他库文件，如IO库，IP库等</li>
-<li>时序约束文件</li>
-<li>STA工具——PT</li>
+<li>异步复位信号通过带reset的触发器的Q端向后传递</li>
+<li>通过两级触发器减小亚稳态概率</li>
 </ul>
 </blockquote>
-<blockquote>
-<p>STA所输出的文件：</p>
-<ul>
-<li>带延时的SDF文件</li>
-<li>各种报告及保留结果的session文件</li>
-<li>timing eco文件</li>
-</ul>
-</blockquote>
-<p>&emsp;&emsp;可以看到，STA和DC输入输出的文件相差不大，其中最重要的内容都是输入的标准单元库、电路描述(DC为Verilog，STA为网表)和约束文件，以及输出的报告。</p>
-<p><img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/DC.png" alt="DC"> <img src="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E7%BB%BC%E8%BF%B0/STA.png" alt="STA"></p>
-<p>&emsp;&emsp;对比DC和STA的流程也十分相似，不同的是因为STA输入的电路描述文件已经是网表，所以不需要再映射为标准单元库中的门级单元，STA中标准单元库主要是提供各单元的逻辑、延时、功耗、电容等信息。同样地，用PT进行静态时序分析也是在pt_shell中完成，通过tcl脚本来批量执行PT命令，具体的命令执行流程在下一篇笔记中详述。</p>
 
       
     </div>
@@ -398,8 +385,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/02/DC%E7%BB%BC%E5%90%88%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%E7%BB%BC%E5%90%88%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="next" title="DC综合笔记（二）综合流程详解">
-                <i class="fa fa-chevron-left"></i> DC综合笔记（二）综合流程详解
+              <a href="/2020/09/25/systemverilog%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" rel="next" title="systemverilog笔记（一）数据类型">
+                <i class="fa fa-chevron-left"></i> systemverilog笔记（一）数据类型
               </a>
             
           </div>
@@ -407,10 +394,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/08/PT%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89PT%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3/" rel="prev" title="PT静态时序分析笔记（二）PT流程详解">
-                PT静态时序分析笔记（二）PT流程详解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +525,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、静态时序分析简介"><span class="nav-number">1.</span> <span class="nav-text">一、静态时序分析简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、静态时序分析基本流程"><span class="nav-number">2.</span> <span class="nav-text">二、静态时序分析基本流程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、异步复位与同步复位"><span class="nav-number">1.</span> <span class="nav-text">一、异步复位与同步复位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、异步复位，同步释放"><span class="nav-number">2.</span> <span class="nav-text">二、异步复位，同步释放</span></a></li></ol></div>
             
 
           </div>
